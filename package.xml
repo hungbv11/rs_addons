@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+<name>rs_addons</name>
+<version>0.0.0</version>
+<description>The RoboSherlock addons package.</description>
+
+<maintainer email="balintbe@cs.uni-bremen.de">Ferenc Balint-Benczedi</maintainer>
+
+
+<license>Apache 2.0</license>
+
+<author email="balintbe@cs.uni-bremen.de">Ferenc Balint-Benczedi</author>
+
+
+<buildtool_depend>catkin</buildtool_depend>
+<build_depend>robosherlock</build_depend>
+<build_depend>simtrack_nodes</build_depend>
+<run_depend>robosherlock</run_depend>
+<run_depend>simtrack_nodes</run_depend>
+
+
+<!-- The export tag contains other, unspecified, tags -->
+<export>
+<!-- Other tools can request additional information be placed here -->
+
+</export>
+</package>
