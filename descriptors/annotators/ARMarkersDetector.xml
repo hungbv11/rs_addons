@@ -26,21 +26,18 @@
     </configurationParameterSettings>
     <typeSystemDescription>
       <imports>
-          <import location="../../../../iai_rs_cpp/descriptors/typesystem/allTypesDescriptor.xml"/>
+          <import location="../typesystem/all_types.xml"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
     <capabilities>
       <capability>
         <inputs>
-            <type allAnnotatorFeatures="true">iai_rs.cv.Mat</type>
+          <type allAnnotatorFeatures="true">rs.cv.Mat</type>
         </inputs>
         <outputs>
-          <type allAnnotatorFeatures="true">iai_rs.annotation.ARMarker</type>
+          <type allAnnotatorFeatures="true">rs.annotation.ARMarker</type>
         </outputs>
-        <inputSofas>
-          <sofaName>iai_rs.cv.Mat</sofaName>
-        </inputSofas>
         <languagesSupported>
           <language>x-unspecified</language>
         </languagesSupported>

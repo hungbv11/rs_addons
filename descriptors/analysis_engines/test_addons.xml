@@ -13,6 +13,9 @@
     <delegateAnalysisEngine key="BoardDetector">
       <import location="../../../robosherlock/descriptors/annotators/detection/BoardDetector.xml"/>
     </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="CaffeClassificationAnnotator">
+      <import location="../annotators/CaffeClassificationAnnotator.xml"/>
+    </delegateAnalysisEngine>
     <delegateAnalysisEngine key="ClassifierDetection">
       <import location="../../../robosherlock/descriptors/annotators/recognition/ClassifierDetection.xml"/>
     </delegateAnalysisEngine>
@@ -33,6 +36,9 @@
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="CollectionReader">
       <import location="../../../robosherlock/descriptors/annotators/io/CollectionReader.xml"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="DeCafClassifier">
+      <import location="../annotators/DeCafClassifier.xml"/>
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="FeatureAnnotator">
       <import location="../../../robosherlock/descriptors/annotators/annotation/FeatureAnnotator.xml"/>
@@ -134,8 +140,8 @@
         <value>
           <array>
 <!--            <string>config_kinect_robot.ini</string>-->
-<!--            <string>config_mongodb_playback.ini</string>-->
-            <string>config_xtion.ini</string>
+            <string>config_mongodb_playback.ini</string>
+           <!-- <string>config_xtion.ini</string>-->
           </array>
         </value>
       </nameValuePair>
@@ -149,8 +155,8 @@
       <node>NormalEstimator</node>
       <node>PlaneAnnotator</node>
       <node>PointCloudClusterExtractor</node>
-
-      <node>SimtrackDetection</node>
+      <node>CaffeClassificationAnnotator</node>
+     <!-- <node>SimtrackDetection</node>-->
 <!--            <node>ClusterMerger</node>-->
       </fixedFlow>
     </flowConstraints>
