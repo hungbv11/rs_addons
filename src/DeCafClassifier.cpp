@@ -23,9 +23,8 @@
 #include <ros/package.h>
 
 #include <rs_addons/CaffeProxy.h>
-//#include <vision_exercise/types/all_types.h>
 
-#define CAFFE_DIR "/home/balintbe/local/caffe"
+#define CAFFE_DIR "/home/balintbe/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
 #define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 #define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
@@ -59,7 +58,7 @@ public:
   TyErrorId initialize(AnnotatorContext &ctx)
   {
     outInfo("initialize");
-    packagePath = ros::package::getPath("vision_exercise") + '/';
+    packagePath = ros::package::getPath("rs_addons") + '/';
     ctx.extractValue("DeCafH5File", h5_file);
     ctx.extractValue("DeCafListFile", list_file);
     ctx.extractValue("DeCafKDTreeIndices", kdtree_file);
@@ -131,6 +130,12 @@ public:
       {
         outInfo("    " << j << " - " << models[k_indices[j]].first << " (" << k_indices[j] << ") with a distance of: " << k_distances[j]);
       }
+
+      rs::Detection detection = rs::create<rs::Detection>(tcas);
+      detection.name.set( models[k_indices[0]].first);
+      detection.source.set("DeCafClassifier");
+      detection.confidence.set(k_distances[0]);
+      cluster.annotations.append(detection);
 
       rs::ImageROI image_roi = cluster.rois();
       cv::Rect rect;

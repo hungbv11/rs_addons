@@ -38,25 +38,25 @@
       <nameValuePair>
         <name>DeCafH5File</name>
         <value>
-          <string>data/training_e4/cnnfc7.hdf5</string>
+          <string>data/training_acat/cnnfc7.hdf5</string>
         </value>
       </nameValuePair>
       <nameValuePair>
         <name>DeCafListFile</name>
         <value>
-          <string>data/training_e4/cnnfc7.list</string>
+          <string>data/training_acat/cnnfc7.list</string>
         </value>
       </nameValuePair>
       <nameValuePair>
         <name>DeCafKDTreeIndices</name>
         <value>
-          <string>data/training_e4/kdtree.idx</string>
+          <string>data/training_acat/kdtree.idx</string>
         </value>
       </nameValuePair>
       <nameValuePair>
         <name>DeCafKNeighbors</name>
         <value>
-          <integer>6</integer>
+          <integer>4</integer>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
