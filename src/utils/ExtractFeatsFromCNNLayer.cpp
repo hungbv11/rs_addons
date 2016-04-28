@@ -18,8 +18,8 @@
 #include <dirent.h>
 #include <fstream>
 
-#define TRAIN_DIR "/data/features_cnn_"
-#define CAFFE_DIR "/home/ferenc/local/src/caffe"
+#define TRAIN_DIR "/data/training_acat"
+#define CAFFE_DIR "/home/balintbe/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
 #define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 #define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
@@ -108,7 +108,7 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       {
         data[i][j] = cnn_features[i].second[j];
       }
-    std::string packagePath = ros::package::getPath("rs_resources");
+    std::string packagePath = ros::package::getPath("rs_addons");
     std::string savePath = packagePath + TRAIN_DIR;
     flann::save_to_file (data, savePath+"/cnnfc7.hdf5", "training_data");
     std::ofstream fs;
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
 
   std::map<std::string, std::vector<std::string> > modelFilesPNG;
 
-  std::string packagePath = ros::package::getPath("vision_exercise");
+  std::string packagePath = ros::package::getPath("rs_addons");
   getTrainingFiles(packagePath + TRAIN_DIR, modelFilesPNG, "_crop.png");
   extractCNNFeature(modelFilesPNG);
 

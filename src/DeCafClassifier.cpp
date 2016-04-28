@@ -99,7 +99,7 @@ public:
     rs::SceneCas cas(tcas);
 
     cas.get(VIEW_CLOUD, *cloud);
-    cas.get(VIEW_COLOR_IMAGE, color);
+    cas.get(VIEW_COLOR_IMAGE_HD, color);
 
     rs::Scene scene = cas.getScene();
 
@@ -114,7 +114,7 @@ public:
       }
       const std::string &name = "cluster" + std::to_string(i);
       cv::Rect roi;
-      rs::conversion::from(cluster.rois().roi(), roi);
+      rs::conversion::from(cluster.rois().roi_hires(), roi);
 
       const cv::Mat &clusterImg = color(roi);
 
@@ -132,14 +132,14 @@ public:
       }
 
       rs::Detection detection = rs::create<rs::Detection>(tcas);
-      detection.name.set( models[k_indices[0]].first);
+      detection.name.set(models[k_indices[0]].first);
       detection.source.set("DeCafClassifier");
       detection.confidence.set(k_distances[0]);
       cluster.annotations.append(detection);
 
       rs::ImageROI image_roi = cluster.rois();
       cv::Rect rect;
-      rs::conversion::from(image_roi.roi(), rect);
+      rs::conversion::from(image_roi.roi_hires(), rect);
       drawCluster(rect, models[k_indices[0]].first);
     }
 
@@ -149,9 +149,9 @@ public:
   {
     cv::rectangle(color, roi, CV_RGB(255, 0, 0));
     int offset = 7;
-      int baseLine;
-      cv::Size textSize = cv::getTextSize(label, cv::FONT_HERSHEY_PLAIN, 0.8, 1, &baseLine);
-      cv::putText(color, label, cv::Point(roi.x + (roi.width - textSize.width) / 2, roi.y - offset - textSize.height), cv::FONT_HERSHEY_PLAIN, 0.8, CV_RGB(255, 255, 200), 1.0);
+    int baseLine;
+    cv::Size textSize = cv::getTextSize(label, cv::FONT_HERSHEY_PLAIN, 0.8, 1, &baseLine);
+    cv::putText(color, label, cv::Point(roi.x + (roi.width - textSize.width) / 2, roi.y - offset - textSize.height), cv::FONT_HERSHEY_PLAIN, 0.8, CV_RGB(255, 255, 200), 1.0);
   }
 
   void drawImageWithLock(cv::Mat &disp)
