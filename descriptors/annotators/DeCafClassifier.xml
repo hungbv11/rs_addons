@@ -68,10 +68,13 @@
     <capabilities>
       <capability>
         <inputs/>
-        <outputs/>
-        <languagesSupported>
-          <language>x-unspecified</language>
-        </languagesSupported>
+        <outputs>
+          <type allAnnotatorFeatures="true">rs.annotation.Detection</type>
+        </outputs>
+        <inputSofas>
+          <sofaName>rs.scene.MergedCluster</sofaName>
+        </inputSofas>
+        <languagesSupported/>
       </capability>
     </capabilities>
     <operationalProperties>
