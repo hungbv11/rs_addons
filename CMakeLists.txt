@@ -83,7 +83,7 @@ if(aruco_FOUND)
 endif(aruco_FOUND)
 
 
-#if(Caffe_FOUND)
+if(Caffe_FOUND)
   add_library(rs_caffeProxyLib src/CaffeProxy.cpp)
   target_link_libraries(rs_caffeProxyLib ${catkin_LIBRARIES} ${Caffe_LIBRARIES} ${PCL_LIBRARIES})
  
@@ -95,4 +95,4 @@ endif(aruco_FOUND)
 
   rs_add_library(rs_deCafClassifier src/DeCafClassifier.cpp)
   target_link_libraries(rs_deCafClassifier rs_caffeProxyLib ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-#endif(Caffe_FOUND)
+endif(Caffe_FOUND)
