@@ -12,6 +12,8 @@
 //Caffe
 #include <caffe/caffe.hpp>
 
+#include <ros/package.h>
+
 #include <rs_addons/CaffeProxy.h>
 
 typedef pcl::PointXYZRGBA PointT;
@@ -33,12 +35,13 @@ private:
   /**
    * Four arguments needed by the CaffeClasifier object from this annotator
    */
+  string resourcesPath;
   string model_file;//caffe prototext model def.
   string trained_file;//the trained model
   string mean_file;//mean images
   string label_file;//sysnsets
 
-  CaffeProxy *classifier;
+  std::shared_ptr<CaffeProxy> classifier;
 
   float test_param;
   double pointSize;
@@ -54,11 +57,24 @@ public:
   TyErrorId initialize(AnnotatorContext &ctx)
   {
     outInfo("initialize");
+    resourcesPath = ros::package::getPath("rs_resources") + '/';
+
     ctx.extractValue("model_file", model_file);
     ctx.extractValue("trained_file", trained_file);
     ctx.extractValue("mean_file", mean_file);
     ctx.extractValue("label_file", label_file);
-    classifier = new CaffeProxy(model_file, trained_file, mean_file, label_file);
+    if(!boost::filesystem::exists(resourcesPath + model_file) ||
+       !boost::filesystem::exists(resourcesPath + trained_file) ||
+       !boost::filesystem::exists(resourcesPath + mean_file) ||
+       !boost::filesystem::exists(resourcesPath + label_file))
+    {
+      outError("files not found!");
+      return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_INIT;
+    }
+    classifier = std::make_shared<CaffeProxy>(resourcesPath + model_file,
+                                resourcesPath + trained_file,
+                                resourcesPath + mean_file,
+                                resourcesPath + label_file);
     return UIMA_ERR_NONE;
   }
 
@@ -71,7 +87,6 @@ public:
   TyErrorId destroy()
   {
     outInfo("destroy");
-    delete classifier;
     return UIMA_ERR_NONE;
   }
 
@@ -83,9 +98,9 @@ public:
     rs::SceneCas cas(tcas);
     rs::Scene scene = cas.getScene();
 
-    cas.get(VIEW_CLOUD,*cloud_ptr);
+    cas.get(VIEW_CLOUD, *cloud_ptr);
     clusters.clear();
-    cas.get(VIEW_COLOR_IMAGE_HD,color);
+    cas.get(VIEW_COLOR_IMAGE_HD, color);
 
     //2.filter out clusters into array
     scene.identifiables.filter(clusters);
@@ -119,8 +134,8 @@ public:
       std::vector<Prediction> predictions = classifier->Classify(inputImage);
 
       std::vector<float> feature = classifier->extractFeature(inputImage);
-      outInfo("Size of feature extracted is: "<<feature.size());
-      outInfo("max element is : " <<*std::max_element(feature.begin(),feature.end()));
+      outInfo("Size of feature extracted is: " << feature.size());
+      outInfo("max element is : " << *std::max_element(feature.begin(), feature.end()));
 
       predictionsAllClusters.push_back(predictions);
       ////////////////////////////////////////////////////////////////////

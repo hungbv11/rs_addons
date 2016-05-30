@@ -45,28 +45,28 @@
       <nameValuePair>
         <name>model_file</name>
         <value>
-            <string>/home/ferenc/local/src/caffe/models/bvlc_reference_caffenet/deploy.prototxt</string>
+            <string>/caffe/models/bvlc_reference_caffenet/deploy.prototxt</string>
         </value>
       </nameValuePair>
 
       <nameValuePair>
         <name>trained_file</name>
         <value>
-            <string>/home/ferenc/local/src/caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel</string>
+            <string>/caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel</string>
         </value>
       </nameValuePair>
 
       <nameValuePair>
         <name>mean_file</name>
         <value>
-            <string>/home/ferenc/local/src/caffe/data/ilsvrc12/imagenet_mean.binaryproto</string>
+            <string>/caffe/data/imagenet_mean.binaryproto</string>
         </value>
       </nameValuePair>
 
       <nameValuePair>
         <name>label_file</name>
         <value>
-            <string>/home/ferenc/local/src/caffe/data/ilsvrc12/synset_words.txt</string>
+            <string>/caffe/data/synset_words.txt</string>
         </value>
       </nameValuePair>
 

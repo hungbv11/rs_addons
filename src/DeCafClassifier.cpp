@@ -24,11 +24,6 @@
 
 #include <rs_addons/CaffeProxy.h>
 
-#define CAFFE_DIR "/home/balintbe/local/src/caffe"
-#define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
-#define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
-#define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
-#define CAFFE_LABLE_FILE CAFFE_DIR "/data/ilsvrc12/synset_words.txt"
 
 using namespace uima;
 
@@ -38,10 +33,13 @@ private:
   typedef std::pair<std::string, std::vector<float> > Model;
   typedef flann::Index<flann::ChiSquareDistance<float> > Index;
 
-  std::string packagePath, h5_file, list_file, kdtree_file;
+  std::string resourcesPath;
+  std::string h5_file, list_file, kdtree_file;
+  std::string caffe_model_file, caffe_trained_file, caffe_mean_file, caffe_label_file;
   std::vector<Model> models;
+
   cv::Mat data;
-  CaffeProxy caffeProxyObj;
+  std::shared_ptr<CaffeProxy> caffeProxyObj;
   cv::flann::Index index;
 
   int k;
@@ -50,7 +48,7 @@ private:
   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud;
 public:
 
-  DeCafClassifier(): DrawingAnnotator(__func__), caffeProxyObj(CAFFE_MODEL_FILE, CAFFE_TRAINED_FILE, CAFFE_MEAN_FILE, CAFFE_LABLE_FILE)
+  DeCafClassifier(): DrawingAnnotator(__func__)
   {
     cloud = pcl::PointCloud<pcl::PointXYZRGBA>::Ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
   }
@@ -58,26 +56,46 @@ public:
   TyErrorId initialize(AnnotatorContext &ctx)
   {
     outInfo("initialize");
-    packagePath = ros::package::getPath("rs_addons") + '/';
+    resourcesPath = ros::package::getPath("rs_resources") + '/';
+
     ctx.extractValue("DeCafH5File", h5_file);
     ctx.extractValue("DeCafListFile", list_file);
     ctx.extractValue("DeCafKDTreeIndices", kdtree_file);
     ctx.extractValue("DeCafKNeighbors", k);
 
+    ctx.extractValue("caffe_model_file", caffe_model_file);
+    ctx.extractValue("caffe_trained_file", caffe_trained_file);
+    ctx.extractValue("caffe_mean_file", caffe_mean_file);
+    ctx.extractValue("caffe_label_file", caffe_label_file);
+
     outInfo(h5_file);
     outInfo(list_file);
     outInfo(kdtree_file);
+    outInfo(caffe_model_file);
+    outInfo(caffe_trained_file);
+    outInfo(caffe_mean_file);
+    outInfo(caffe_label_file);
 
     // Check if the data has already been saved to disk
-    if(!boost::filesystem::exists(packagePath + h5_file) || !boost::filesystem::exists(packagePath + list_file) || !boost::filesystem::exists(packagePath + kdtree_file))
+    if(!boost::filesystem::exists(resourcesPath + h5_file) ||
+       !boost::filesystem::exists(resourcesPath + list_file) ||
+       !boost::filesystem::exists(resourcesPath + kdtree_file) ||
+       !boost::filesystem::exists(resourcesPath + caffe_model_file) ||
+       !boost::filesystem::exists(resourcesPath + caffe_trained_file) ||
+       !boost::filesystem::exists(resourcesPath + caffe_mean_file) ||
+       !boost::filesystem::exists(resourcesPath + caffe_label_file))
     {
       outError("files not found!");
       return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_INIT;
     }
+    caffeProxyObj = std::make_shared<CaffeProxy>(resourcesPath + caffe_model_file,
+                    resourcesPath + caffe_trained_file,
+                    resourcesPath + caffe_mean_file,
+                    resourcesPath + caffe_label_file);
 
     flann::Matrix<float> data;
-    loadFileList(models, packagePath + list_file);
-    flann::load_from_file(data, packagePath + h5_file, "training_data");
+    loadFileList(models, resourcesPath + list_file);
+    flann::load_from_file(data, resourcesPath + h5_file, "training_data");
     outInfo("Training data found. Loaded " << data.rows << " models from " << h5_file << "/" << list_file);
 
     this->data = cv::Mat(data.rows, data.cols, CV_32F, data.ptr()).clone();
@@ -118,7 +136,7 @@ public:
 
       const cv::Mat &clusterImg = color(roi);
 
-      Model feature(name, caffeProxyObj.extractFeature(clusterImg));
+      Model feature(name, caffeProxyObj->extractFeature(clusterImg));
 
       std::vector<int> k_indices;
       std::vector<float> k_distances;

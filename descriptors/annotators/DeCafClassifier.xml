@@ -9,56 +9,122 @@
     <version>1.0</version>
     <vendor/>
     <configurationParameters>
+
       <configurationParameter>
         <name>DeCafH5File</name>
         <type>String</type>
         <multiValued>false</multiValued>
         <mandatory>true</mandatory>
       </configurationParameter>
+
       <configurationParameter>
         <name>DeCafListFile</name>
         <type>String</type>
         <multiValued>false</multiValued>
         <mandatory>true</mandatory>
       </configurationParameter>
+
       <configurationParameter>
         <name>DeCafKDTreeIndices</name>
         <type>String</type>
         <multiValued>false</multiValued>
         <mandatory>true</mandatory>
       </configurationParameter>
+
       <configurationParameter>
         <name>DeCafKNeighbors</name>
         <type>Integer</type>
         <multiValued>false</multiValued>
         <mandatory>true</mandatory>
+      </configurationParameter>      
+
+      <configurationParameter>
+        <name>caffe_model_file</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+
+      <configurationParameter>
+        <name>caffe_trained_file</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+
+      <configurationParameter>
+        <name>caffe_mean_file</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+
+      <configurationParameter>
+        <name>caffe_label_file</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
       </configurationParameter>
     </configurationParameters>
+
     <configurationParameterSettings>
       <nameValuePair>
         <name>DeCafH5File</name>
         <value>
-          <string>data/training_acat/cnnfc7.hdf5</string>
+          <string>/chemlab_bvlc_fc7/cnnfc7.hdf5</string>
         </value>
       </nameValuePair>
+
       <nameValuePair>
         <name>DeCafListFile</name>
         <value>
-          <string>data/training_acat/cnnfc7.list</string>
+          <string>/chemlab_bvlc_fc7/cnnfc7.list</string>
         </value>
       </nameValuePair>
+
       <nameValuePair>
         <name>DeCafKDTreeIndices</name>
         <value>
-          <string>data/training_acat/kdtree.idx</string>
+          <string>/chemlab_bvlc_fc7/kdtree.idx</string>
         </value>
       </nameValuePair>
+
       <nameValuePair>
         <name>DeCafKNeighbors</name>
         <value>
           <integer>4</integer>
         </value>
       </nameValuePair>
+
+      <nameValuePair>
+        <name>caffe_model_file</name>
+        <value>
+            <string>/caffe/models/bvlc_reference_caffenet/deploy.prototxt</string>
+        </value>
+      </nameValuePair>
+
+      <nameValuePair>
+        <name>caffe_trained_file</name>
+        <value>
+            <string>/caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel</string>
+        </value>
+      </nameValuePair>
+
+      <nameValuePair>
+        <name>caffe_mean_file</name>
+        <value>
+            <string>/caffe/data/imagenet_mean.binaryproto</string>
+        </value>
+      </nameValuePair>
+
+      <nameValuePair>
+        <name>caffe_label_file</name>
+        <value>
+            <string>/caffe/data/synset_words.txt</string>
+        </value>
+      </nameValuePair>
+
+
     </configurationParameterSettings>
     <typeSystemDescription>
       <imports>

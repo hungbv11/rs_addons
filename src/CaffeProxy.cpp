@@ -10,6 +10,7 @@
 
 #include <rs_addons/CaffeProxy.h>
 
+
 CaffeProxy::CaffeProxy(const string &model_file,
                        const string &trained_file,
                        const string &mean_file,
