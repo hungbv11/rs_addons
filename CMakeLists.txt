@@ -16,11 +16,12 @@ if(Caffe_FOUND)
   add_definitions( -DCAFFE_FOUND ${Caffe_DEFINITIONS})
 endif(Caffe_FOUND)
 
-find_package(catkin REQUIRED robosherlock 
-	message_generation 
-	message_runtime
-	${OPTIONAL_simtrack}
-	)
+find_package(catkin REQUIRED robosherlock
+  message_generation
+  message_runtime
+  ${OPTIONAL_simtrack}
+)
+
 ################################################################################
 ## Constants for project                                                      ##
 ################################################################################
@@ -87,7 +88,7 @@ endif(aruco_FOUND)
 
 if(Caffe_FOUND) 
   add_executable(extractfeats src/utils/ExtractFeatsFromCNNLayer)
-  target_link_libraries(extractfeats ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+  target_link_libraries(extractfeats ${PCL_LIBRARIES} ${catkin_LIBRARIES} ${Caffe_LIBRARIES})
   
   rs_add_library(rs_caffeClassification src/CaffeClassificationAnnotator.cpp)
   target_link_libraries(rs_caffeClassification ${catkin_LIBRARIES})
