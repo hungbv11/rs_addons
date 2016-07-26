@@ -1,31 +1,43 @@
 #include <uima/api.hpp>
-
 #include <ros/package.h>
 
-#include <pcl/point_types.h>
-#include <pcl/filters/extract_indices.h>
-#include <pcl_conversions/pcl_conversions.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/features/vfh.h>
-#include <pcl/features/normal_3d.h>
+//#include <pcl/point_types.h>
+//#include <pcl/filters/extract_indices.h>
+//#include <pcl_conversions/pcl_conversions.h>
+//#include <pcl/io/pcd_io.h>
+//#include <pcl/features/vfh.h>
+//#include <pcl/features/normal_3d.h>
 #include <flann/flann.h>
 #include <flann/io/hdf5.h>
 
 #include <opencv/highgui.h>
 
-#include <rs_addons/CaffeProxy.h>
+#include <rs/recognition/CaffeProxy.h>
 
 #include <dirent.h>
 #include <fstream>
 
-#define TRAIN_DIR "/data/training_acat"
-#define CAFFE_DIR "/home/balintbe/local/src/caffe"
+#include <yaml-cpp/yaml.h>
+
+#include <boost/program_options.hpp>
+
+#define TRAIN_DIR "/data/training_robohow"
+//#define TRAIN_DIR "objects_dataset/partial_views"
+#define CAFFE_DIR "/home/ferenc/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
 #define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 #define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
 #define CAFFE_LABLE_FILE CAFFE_DIR "/data/ilsvrc12/synset_words.txt"
 
-void getTrainingFiles(const std::string &path, std::map<std::string, std::vector<std::string>> &modelFiles, std::string fileExtension)
+namespace po = boost::program_options;
+
+
+class FileHandler
+{
+  FileHandler();
+};
+
+void getFiles(const std::string &path, std::map<std::string, std::vector<std::string>> &modelFiles, std::string fileExtension)
 {
   DIR *dp;
   struct dirent *dirp;
@@ -82,7 +94,6 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
                            CAFFE_MEAN_FILE,
                            CAFFE_LABLE_FILE);
 
-
   std::vector<std::pair<std::string, std::vector<float> > > cnn_features;
 
   for(std::map<std::string, std::vector<std::string>>::const_iterator it = modelFiles.begin();
@@ -125,13 +136,38 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
 
 }
 
+
+
+
 int main(int argc, char **argv)
 {
+
+//  po::options_description desc("Allowed options");
+//  desc.add_options()
+//      ("help", "produce help message")
+//      ("compression", po::value<int>(), "set compression level")
+//  ;
+
+//  po::variables_map vm;
+//  po::store(po::parse_command_line(argc, argv, desc), vm);
+//  po::notify(vm);
+
+//  if (vm.count("help")) {
+//      std::cout << desc << "\n";
+//      return 1;
+//  }
+
+//  if (vm.count("compression")) {
+//      std::cout << "Compression level was set to "
+//   << vm["compression"].as<int>() << ".\n";
+//  } else {
+//      std::cout << "Compression level was not set.\n";
+//  }
 
   std::map<std::string, std::vector<std::string> > modelFilesPNG;
 
   std::string packagePath = ros::package::getPath("rs_addons");
-  getTrainingFiles(packagePath + TRAIN_DIR, modelFilesPNG, "_crop.png");
+  getFiles(packagePath + TRAIN_DIR, modelFilesPNG, "_crop.png");
   extractCNNFeature(modelFilesPNG);
 
   return true;

@@ -22,7 +22,7 @@
 
 #include <ros/package.h>
 
-#include <rs_addons/CaffeProxy.h>
+#include <rs/recognition/CaffeProxy.h>
 
 
 using namespace uima;

@@ -85,16 +85,13 @@ else(aruco_FOUND)
 endif(aruco_FOUND)
 
 
-if(Caffe_FOUND)
-  add_library(rs_caffeProxyLib src/CaffeProxy.cpp)
-  target_link_libraries(rs_caffeProxyLib ${catkin_LIBRARIES} ${Caffe_LIBRARIES} ${PCL_LIBRARIES})
- 
+if(Caffe_FOUND) 
   add_executable(extractfeats src/utils/ExtractFeatsFromCNNLayer)
-  target_link_libraries(extractfeats rs_caffeProxyLib ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+  target_link_libraries(extractfeats ${PCL_LIBRARIES} ${catkin_LIBRARIES})
   
   rs_add_library(rs_caffeClassification src/CaffeClassificationAnnotator.cpp)
-  target_link_libraries(rs_caffeClassification rs_caffeProxyLib ${catkin_LIBRARIES})
+  target_link_libraries(rs_caffeClassification ${catkin_LIBRARIES})
 
   rs_add_library(rs_deCafClassifier src/DeCafClassifier.cpp)
-  target_link_libraries(rs_deCafClassifier rs_caffeProxyLib ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+  target_link_libraries(rs_deCafClassifier ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 endif(Caffe_FOUND)
