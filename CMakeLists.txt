@@ -14,6 +14,7 @@ if(Caffe_FOUND)
   message(STATUS "OPTIONAL MODULE Caffe FOUND")
   set(OPTIONAL_Caffe Caffe)
   add_definitions( -DCAFFE_FOUND ${Caffe_DEFINITIONS})
+  include_directories(${Caffe_INCLUDE_DIRS})
 endif(Caffe_FOUND)
 
 find_package(catkin REQUIRED robosherlock
