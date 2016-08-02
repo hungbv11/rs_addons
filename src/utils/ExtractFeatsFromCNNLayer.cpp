@@ -87,6 +87,7 @@ void getFiles(const std::string &path, std::map<std::string, std::vector<std::st
   }
 }
 
+
 void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles)
 {
   CaffeProxy caffeProxyObj(CAFFE_MODEL_FILE,
@@ -105,7 +106,12 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       std::cerr << it->second[i] << std::endl;
       cv::Mat rgb = cv::imread(it->second[i]);
       std::vector<float> feature = caffeProxyObj.extractFeature(rgb);
-      cnn_features.push_back(std::pair<std::string, std::vector<float>>(it->first, feature));
+
+      cv::Mat desc(1, feature.size(), CV_32F, &feature[0]);
+      cv::normalize(desc,desc,0,1,cv::NORM_MINMAX);
+      std::vector<float> descNormed;
+      descNormed.assign((float *)desc.datastart,(float*)desc.dataend);
+      cnn_features.push_back(std::pair<std::string, std::vector<float>>(it->first, descNormed));
     }
   }
   std::cerr << "cnn_features size: " << cnn_features.size() << std::endl;

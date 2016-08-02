@@ -136,7 +136,13 @@ public:
 
       const cv::Mat &clusterImg = color(roi);
 
-      Model feature(name, caffeProxyObj->extractFeature(clusterImg));
+
+      std::vector<float> featureVec = caffeProxyObj->extractFeature(clusterImg);
+      cv::Mat desc(1, featureVec.size(), CV_32F, &featureVec[0]);
+      cv::normalize(desc,desc,0,1,cv::NORM_MINMAX);
+      featureVec.assign((float*)desc.datastart,(float *)desc.dataend);
+
+      Model feature(name, featureVec);
 
       std::vector<int> k_indices;
       std::vector<float> k_distances;
