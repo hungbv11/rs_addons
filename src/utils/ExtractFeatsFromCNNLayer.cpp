@@ -23,7 +23,7 @@
 
 #define TRAIN_DIR "/data/training_robohow"
 //#define TRAIN_DIR "objects_dataset/partial_views"
-#define CAFFE_DIR "/home/ferenc/local/src/caffe"
+#define CAFFE_DIR "/home/balintbe/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
 #define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 #define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
@@ -108,7 +108,7 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       std::vector<float> feature = caffeProxyObj.extractFeature(rgb);
 
       cv::Mat desc(1, feature.size(), CV_32F, &feature[0]);
-      cv::normalize(desc,desc,0,1,cv::NORM_MINMAX);
+      cv::normalize(desc,desc,1,0,cv::NORM_L2);
       std::vector<float> descNormed;
       descNormed.assign((float *)desc.datastart,(float*)desc.dataend);
       cnn_features.push_back(std::pair<std::string, std::vector<float>>(it->first, descNormed));

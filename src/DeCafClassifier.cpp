@@ -139,8 +139,8 @@ public:
 
       std::vector<float> featureVec = caffeProxyObj->extractFeature(clusterImg);
       cv::Mat desc(1, featureVec.size(), CV_32F, &featureVec[0]);
-      cv::normalize(desc,desc,0,1,cv::NORM_MINMAX);
-      featureVec.assign((float*)desc.datastart,(float *)desc.dataend);
+      cv::normalize(desc, desc, 1, 0, cv::NORM_L2);
+      featureVec.assign((float *)desc.datastart, (float *)desc.dataend);
 
       Model feature(name, featureVec);
 
@@ -152,19 +152,21 @@ public:
       outInfo("The closest " << k << " neighbors for cluser " << i << " are:");
       for(int j = 0; j < k; ++j)
       {
-        outInfo("    " << j << " - " << models[k_indices[j]].first << " (" << k_indices[j] << ") with a distance of: " << k_distances[j]);
+        outInfo("    " << j << " - " << models[k_indices[j]].first << " (" << k_indices[j] << ") with a distance of: " << k_distances[j] << " confidence: "<<(2-k_distances[j])/2);
       }
+      if(k_distances[0] < 0.65)
+      {
+        rs::Detection detection = rs::create<rs::Detection>(tcas);
+        detection.name.set(models[k_indices[0]].first);
+        detection.source.set("DeCafClassifier");
+        detection.confidence.set(k_distances[0]);
+        cluster.annotations.append(detection);
 
-      rs::Detection detection = rs::create<rs::Detection>(tcas);
-      detection.name.set(models[k_indices[0]].first);
-      detection.source.set("DeCafClassifier");
-      detection.confidence.set(k_distances[0]);
-      cluster.annotations.append(detection);
-
-      rs::ImageROI image_roi = cluster.rois();
-      cv::Rect rect;
-      rs::conversion::from(image_roi.roi_hires(), rect);
-      drawCluster(rect, models[k_indices[0]].first);
+        rs::ImageROI image_roi = cluster.rois();
+        cv::Rect rect;
+        rs::conversion::from(image_roi.roi_hires(), rect);
+        drawCluster(rect, models[k_indices[0]].first);
+      }
     }
 
     return UIMA_ERR_NONE;
