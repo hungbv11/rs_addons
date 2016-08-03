@@ -159,7 +159,7 @@ public:
         rs::Detection detection = rs::create<rs::Detection>(tcas);
         detection.name.set(models[k_indices[0]].first);
         detection.source.set("DeCafClassifier");
-        detection.confidence.set(k_distances[0]);
+        detection.confidence.set((2-k_distances[0])/2);
         cluster.annotations.append(detection);
 
         rs::ImageROI image_roi = cluster.rois();
