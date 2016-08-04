@@ -1,4 +1,4 @@
-#include <uima/api.hpp>
+﻿#include <uima/api.hpp>
 #include <ros/package.h>
 
 //#include <pcl/point_types.h>
@@ -23,7 +23,8 @@
 
 #define TRAIN_DIR "/data/training_robohow"
 //#define TRAIN_DIR "objects_dataset/partial_views"
-#define CAFFE_DIR "/home/balintbe/local/src/caffe"
+
+#define CAFFE_DIR "/home/bbferka/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
 #define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 #define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
@@ -31,11 +32,6 @@
 
 namespace po = boost::program_options;
 
-
-class FileHandler
-{
-  FileHandler();
-};
 
 void getFiles(const std::string &path, std::map<std::string, std::vector<std::string>> &modelFiles, std::string fileExtension)
 {
@@ -86,7 +82,6 @@ void getFiles(const std::string &path, std::map<std::string, std::vector<std::st
     std::sort(it->second.begin(), it->second.end());
   }
 }
-
 
 void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles)
 {
@@ -142,37 +137,72 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
 
 }
 
-
-
-
 int main(int argc, char **argv)
 {
 
-//  po::options_description desc("Allowed options");
-//  desc.add_options()
-//      ("help", "produce help message")
-//      ("compression", po::value<int>(), "set compression level")
-//  ;
+  po::options_description desc("Allowed options");
+  std::string split,feat;
 
-//  po::variables_map vm;
-//  po::store(po::parse_command_line(argc, argv, desc), vm);
-//  po::notify(vm);
+  desc.add_options()
+       ("help,h", "Print help messages")
+       ("split,s", po::value<std::string>(&split)->default_value("all.yaml"),
+        "split file to use")
+       ("feature,f",po::value<std::string>(&feat)->default_value("VFH"),
+        "choose feature to extract: [VFH|CVFH|CNN]");
 
-//  if (vm.count("help")) {
-//      std::cout << desc << "\n";
-//      return 1;
-//  }
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
+  po::notify(vm);
 
-//  if (vm.count("compression")) {
-//      std::cout << "Compression level was set to "
-//   << vm["compression"].as<int>() << ".\n";
-//  } else {
-//      std::cout << "Compression level was not set.\n";
-//  }
+  if (vm.count("help")) {
+      std::cout << desc << "\n";
+      return 1;
+  }
 
+  std::string packagePath = ros::package::getPath("rs_resources");
+
+  std::string splitFilePath = split;
+  if(!boost::filesystem::exists(boost::filesystem::path(split)))
+  {
+    splitFilePath = packagePath+"/objects_dataset/splits/"+split;
+  }
+
+  std::cout<<"Path to split file: "<<splitFilePath<<std::endl;
+
+
+  //label to file
   std::map<std::string, std::vector<std::string> > modelFilesPNG;
+  std::map<std::string, std::vector<std::string> > modelFilesPCD;
 
-  std::string packagePath = ros::package::getPath("rs_addons");
+  cv::FileStorage fs;
+  fs.open(splitFilePath,cv::FileStorage::READ);
+  std::vector<std::string> classes;
+  std::map<std::string,std::vector<std::string>> classToSubclass;
+  fs["classes"]>>classes;
+
+  bool subclassesDefined=false;
+  if(classes.empty())
+  {
+      std::cerr<<"Split file has no classes defined"<<std::endl;
+      return false;
+  }
+  else
+  {
+      subclassesDefined = true;
+      for(auto c:classes)
+      {
+        std::vector<std::string> subclasses;
+        fs[c]>>subclasses;
+        std::cerr<<c<<std::endl;
+        if(!subclasses.empty())
+        {
+            for(auto sc:subclasses)
+                std::cerr<<"  "<<sc<<std::endl;
+            classToSubclass[c] = subclasses;
+        }
+      }
+  }
+
   getFiles(packagePath + TRAIN_DIR, modelFilesPNG, "_crop.png");
   extractCNNFeature(modelFilesPNG);
 
