@@ -71,21 +71,21 @@
       <nameValuePair>
         <name>DeCafH5File</name>
         <value>
-          <string>/chemlab_bvlc_fc7/cnnfc7.hdf5</string>
+            <string>/caffe/extracted_feats/chemlab_bvlc_fc7/cnnfc7.hdf5</string>
         </value>
       </nameValuePair>
 
       <nameValuePair>
         <name>DeCafListFile</name>
         <value>
-          <string>/chemlab_bvlc_fc7/cnnfc7.list</string>
+            <string>/caffe/extracted_feats/chemlab_bvlc_fc7/cnnfc7.list</string>
         </value>
       </nameValuePair>
 
       <nameValuePair>
         <name>DeCafKDTreeIndices</name>
         <value>
-          <string>/chemlab_bvlc_fc7/kdtree.idx</string>
+            <string>/caffe/extracted_feats/chemlab_bvlc_fc7/kdtree.idx</string>
         </value>
       </nameValuePair>
 
