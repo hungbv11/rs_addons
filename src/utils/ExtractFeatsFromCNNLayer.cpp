@@ -21,8 +21,7 @@
 
 #include <boost/program_options.hpp>
 
-#define TRAIN_DIR "/data/training_robohow"
-//#define TRAIN_DIR "objects_dataset/partial_views"
+#define TRAIN_DIR "/objects_dataset/partial_views/"
 
 #define CAFFE_DIR "/home/bbferka/local/src/caffe"
 #define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
@@ -32,8 +31,17 @@
 
 namespace po = boost::program_options;
 
+enum FeatType
+{
+  VFH = 0,
+  CVFH,
+  CNN
+};
 
-void getFiles(const std::string &path, std::map<std::string, std::vector<std::string>> &modelFiles, std::string fileExtension)
+void getFiles(const std::string &path,
+              std::map<std::string, std::string> objectToLabel,
+              std::map<std::string, std::vector<std::string>> &modelFiles,
+              std::string fileExtension)
 {
   DIR *dp;
   struct dirent *dirp;
@@ -103,9 +111,9 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       std::vector<float> feature = caffeProxyObj.extractFeature(rgb);
 
       cv::Mat desc(1, feature.size(), CV_32F, &feature[0]);
-      cv::normalize(desc,desc,1,0,cv::NORM_L2);
+      cv::normalize(desc, desc, 1, 0, cv::NORM_L2);
       std::vector<float> descNormed;
-      descNormed.assign((float *)desc.datastart,(float*)desc.dataend);
+      descNormed.assign((float *)desc.datastart, (float *)desc.dataend);
       cnn_features.push_back(std::pair<std::string, std::vector<float>>(it->first, descNormed));
     }
   }
@@ -122,16 +130,18 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       }
     std::string packagePath = ros::package::getPath("rs_addons");
     std::string savePath = packagePath + TRAIN_DIR;
-    flann::save_to_file (data, savePath+"/cnnfc7.hdf5", "training_data");
+    flann::save_to_file(data, savePath + "/cnnfc7.hdf5", "training_data");
     std::ofstream fs;
-    fs.open (savePath+"/cnnfc7.list");
-    for (size_t i = 0; i < cnn_features.size (); ++i)
+    fs.open(savePath + "/cnnfc7.list");
+    for(size_t i = 0; i < cnn_features.size(); ++i)
+    {
       fs << cnn_features[i].first << "\n";
-    fs.close ();
-    flann::Index<flann::ChiSquareDistance<float> > index (data, flann::LinearIndexParams ());
-    index.buildIndex ();
-    index.save (savePath+"/kdtree.idx");
-    delete[] data.ptr ();
+    }
+    fs.close();
+    flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
+    index.buildIndex();
+    index.save(savePath + "/kdtree.idx");
+    delete[] data.ptr();
 
   }
 
@@ -141,33 +151,46 @@ int main(int argc, char **argv)
 {
 
   po::options_description desc("Allowed options");
-  std::string split,feat;
-
+  std::string split, feat;
+  FeatType ft;
   desc.add_options()
-       ("help,h", "Print help messages")
-       ("split,s", po::value<std::string>(&split)->default_value("all.yaml"),
-        "split file to use")
-       ("feature,f",po::value<std::string>(&feat)->default_value("VFH"),
-        "choose feature to extract: [VFH|CVFH|CNN]");
+  ("help,h", "Print help messages")
+  ("split,s", po::value<std::string>(&split)->default_value("all.yaml"),
+   "split file to use")
+  ("feature,f", po::value<std::string>(&feat)->default_value("VFH"),
+   "choose feature to extract: [VFH|CVFH|CNN]");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
   po::notify(vm);
 
-  if (vm.count("help")) {
-      std::cout << desc << "\n";
-      return 1;
+  if(vm.count("help"))
+  {
+    std::cout << desc << "\n";
+    return 1;
   }
 
+  if(feat == "VFH")
+  {
+    ft = VFH;
+  }
+  else if(feat == "CVFH")
+  {
+    ft = CVFH;
+  }
+  else if(feat == "CNN")
+  {
+    ft = CNN;
+  }
   std::string packagePath = ros::package::getPath("rs_resources");
 
   std::string splitFilePath = split;
   if(!boost::filesystem::exists(boost::filesystem::path(split)))
   {
-    splitFilePath = packagePath+"/objects_dataset/splits/"+split;
+    splitFilePath = packagePath + "/objects_dataset/splits/" + split;
   }
 
-  std::cout<<"Path to split file: "<<splitFilePath<<std::endl;
+  std::cout << "Path to split file: " << splitFilePath << std::endl;
 
 
   //label to file
@@ -175,36 +198,34 @@ int main(int argc, char **argv)
   std::map<std::string, std::vector<std::string> > modelFilesPCD;
 
   cv::FileStorage fs;
-  fs.open(splitFilePath,cv::FileStorage::READ);
+  fs.open(splitFilePath, cv::FileStorage::READ);
   std::vector<std::string> classes;
-  std::map<std::string,std::vector<std::string>> classToSubclass;
-  fs["classes"]>>classes;
 
-  bool subclassesDefined=false;
+
+  std::map<std::string, std::string> objectToLabel;
+  fs["classes"] >> classes;
+
   if(classes.empty())
   {
-      std::cerr<<"Split file has no classes defined"<<std::endl;
-      return false;
+    std::cerr << "Split file has no classes defined" << std::endl;
+    return false;
   }
   else
   {
-      subclassesDefined = true;
-      for(auto c:classes)
-      {
-        std::vector<std::string> subclasses;
-        fs[c]>>subclasses;
-        std::cerr<<c<<std::endl;
-        if(!subclasses.empty())
-        {
-            for(auto sc:subclasses)
-                std::cerr<<"  "<<sc<<std::endl;
-            classToSubclass[c] = subclasses;
-        }
-      }
+    for(auto c : classes)
+    {
+      std::vector<std::string> subclasses;
+      fs[c] >> subclasses;
+      if(!subclasses.empty())
+        for(auto sc : subclasses)
+          objectToLabel[sc] = c;
+      else
+        objectToLabel[c] = c;
+    }
   }
 
-  getFiles(packagePath + TRAIN_DIR, modelFilesPNG, "_crop.png");
-  extractCNNFeature(modelFilesPNG);
+  getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPNG, "_crop.png");
+  //  extractCNNFeature(modelFilesPNG);
 
   return true;
 }
