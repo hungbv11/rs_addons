@@ -23,11 +23,10 @@
 
 #define TRAIN_DIR "/objects_dataset/partial_views/"
 
-#define CAFFE_DIR "/home/bbferka/local/src/caffe"
-#define CAFFE_MODEL_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/deploy.prototxt"
-#define CAFFE_TRAINED_FILE CAFFE_DIR "/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
-#define CAFFE_MEAN_FILE CAFFE_DIR "/data/ilsvrc12/imagenet_mean.binaryproto"
-#define CAFFE_LABLE_FILE CAFFE_DIR "/data/ilsvrc12/synset_words.txt"
+#define CAFFE_MODEL_FILE  "/caffe/models/bvlc_reference_caffenet/deploy.prototxt"
+#define CAFFE_TRAINED_FILE  "/caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
+#define CAFFE_MEAN_FILE  "/caffe/data/imagenet_mean.binaryproto"
+#define CAFFE_LABLE_FILE  "/caffe/data/synset_words.txt"
 
 namespace po = boost::program_options;
 
@@ -43,46 +42,37 @@ void getFiles(const std::string &path,
               std::map<std::string, std::vector<std::string>> &modelFiles,
               std::string fileExtension)
 {
-  DIR *dp;
-  struct dirent *dirp;
+  DIR *classdp;
+  struct dirent *classdirp;
   size_t pos;
 
-  if((dp  = opendir(path.c_str())) ==  NULL)
+  for(auto const & p : objectToLabel)
   {
-    std::cerr << "Error opening: " << std::endl;
-    return;
-  }
 
-  while((dirp = readdir(dp)) != NULL)
-  {
-    std::string classname = dirp->d_name;
-    if(strcmp(dirp->d_name, ".") == 0 || strcmp(dirp->d_name, "..") == 0)
+    std::string pathToObj = path + p.first;
+    classdp = opendir(pathToObj.c_str());
+    if(classdp == NULL)
     {
+      std::cerr << "<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+      std::cerr << "FOLDER DOES NOT EXIST: " << pathToObj << std::endl;
+      std::cerr << "<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
       continue;
     }
 
-    if(dirp->d_type == DT_DIR)
+    while((classdirp = readdir(classdp)) != NULL)
     {
-      DIR *classdp;
-      struct dirent *classdirp;
-      std::string pathToClass = path + "/" + classname;
-      classdp = opendir(pathToClass.c_str());
-      while((classdirp = readdir(classdp)) != NULL)
+      if(classdirp->d_type != DT_REG)
       {
-        if(classdirp->d_type != DT_REG)
-        {
-          continue;
-        }
-        std::string filename = classdirp->d_name;
-        pos = filename.rfind(fileExtension.c_str());
-        if(pos != std::string::npos)
-        {
-          modelFiles[classname].push_back(pathToClass + "/" + filename);
-        }
+        continue;
+      }
+      std::string filename = classdirp->d_name;
+      pos = filename.rfind(fileExtension.c_str());
+      if(pos != std::string::npos)
+      {
+        modelFiles[p.second].push_back(pathToObj + "/" + filename);
       }
     }
   }
-  closedir(dp);
 
   std::map<std::string, std::vector<std::string>>::iterator it;
   for(it = modelFiles.begin(); it != modelFiles.end(); ++it)
@@ -91,12 +81,13 @@ void getFiles(const std::string &path,
   }
 }
 
-void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles)
+void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles,
+                       std::string packagePath)
 {
-  CaffeProxy caffeProxyObj(CAFFE_MODEL_FILE,
-                           CAFFE_TRAINED_FILE,
-                           CAFFE_MEAN_FILE,
-                           CAFFE_LABLE_FILE);
+  CaffeProxy caffeProxyObj(packagePath+CAFFE_MODEL_FILE,
+                           packagePath+CAFFE_TRAINED_FILE,
+                           packagePath+CAFFE_MEAN_FILE,
+                           packagePath+CAFFE_LABLE_FILE);
 
   std::vector<std::pair<std::string, std::vector<float> > > cnn_features;
 
@@ -157,7 +148,7 @@ int main(int argc, char **argv)
   ("help,h", "Print help messages")
   ("split,s", po::value<std::string>(&split)->default_value("all.yaml"),
    "split file to use")
-  ("feature,f", po::value<std::string>(&feat)->default_value("VFH"),
+  ("feature,f", po::value<std::string>(&feat)->default_value("CNN"),
    "choose feature to extract: [VFH|CVFH|CNN]");
 
   po::variables_map vm;
@@ -218,14 +209,25 @@ int main(int argc, char **argv)
       fs[c] >> subclasses;
       if(!subclasses.empty())
         for(auto sc : subclasses)
+        {
           objectToLabel[sc] = c;
+        }
       else
+      {
         objectToLabel[c] = c;
+      }
     }
   }
 
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPNG, "_crop.png");
-  //  extractCNNFeature(modelFilesPNG);
+  switch(ft) {
+      case CNN:
+        extractCNNFeature(modelFilesPNG,packagePath);
+        break;
+      default:
+        std::cerr<<"This is weird"<<std::endl;
+    }
+
 
   return true;
 }
