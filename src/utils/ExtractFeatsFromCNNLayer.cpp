@@ -4,9 +4,10 @@
 //#include <pcl/point_types.h>
 //#include <pcl/filters/extract_indices.h>
 //#include <pcl_conversions/pcl_conversions.h>
-//#include <pcl/io/pcd_io.h>
-//#include <pcl/features/vfh.h>
-//#include <pcl/features/normal_3d.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/features/vfh.h>
+#include <pcl/features/normal_3d.h>
+
 #include <flann/flann.h>
 #include <flann/io/hdf5.h>
 
@@ -85,10 +86,10 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
                        std::string resourcesPackagePath,
                        std::string splitName)
 {
-  CaffeProxy caffeProxyObj(resourcesPackagePath+CAFFE_MODEL_FILE,
-                           resourcesPackagePath+CAFFE_TRAINED_FILE,
-                           resourcesPackagePath+CAFFE_MEAN_FILE,
-                           resourcesPackagePath+CAFFE_LABLE_FILE);
+  CaffeProxy caffeProxyObj(resourcesPackagePath + CAFFE_MODEL_FILE,
+                           resourcesPackagePath + CAFFE_TRAINED_FILE,
+                           resourcesPackagePath + CAFFE_MEAN_FILE,
+                           resourcesPackagePath + CAFFE_LABLE_FILE);
 
   std::vector<std::pair<std::string, std::vector<float> > > cnn_features;
 
@@ -123,9 +124,9 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
       }
     std::string packagePath = ros::package::getPath("rs_addons");
     std::string savePath = packagePath +  "/data/extracted_feats/";
-    flann::save_to_file(data, savePath +  "/cnnfc7_"+splitName+".hdf5", "training_data");
+    flann::save_to_file(data, savePath +  "/cnnfc7_" + splitName + ".hdf5", "training_data");
     std::ofstream fs;
-    fs.open(savePath + "/cnnfc7_"+splitName+".list");
+    fs.open(savePath + "/cnnfc7_" + splitName + ".list");
     for(size_t i = 0; i < cnn_features.size(); ++i)
     {
       fs << cnn_features[i].first << "\n";
@@ -133,20 +134,82 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
     fs.close();
     flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
     index.buildIndex();
-    index.save(savePath + "/cnnfc7_kdtree_"+splitName+".idx");
-    std::cerr<<"Saved data to : "<<savePath<<std::endl;
+    index.save(savePath + "/cnnfc7_kdtree_" + splitName + ".idx");
+    std::cerr << "Saved data to : " << savePath << std::endl;
     delete[] data.ptr();
   }
 
 }
 
-void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles,std::string splitName)
+void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles, std::string splitName)
 {
+  //TODO: add preprocessing
+  pcl::VFHEstimation<pcl::PointXYZRGBA, pcl::Normal, pcl::VFHSignature308> vfhEstimation;
 
-  std::string packagePath = ros::package::getPath("rs_addons");
-  std::string savePath = packagePath +  "/data/extracted_feats/";
-  std::string fileName = "vfh_"+splitName;
+  std::vector<std::pair<std::string, std::vector<float> > > vfh_features;
 
+  for(std::map<std::string, std::vector<std::string>>::const_iterator it = modelFiles.begin();
+      it != modelFiles.end(); ++it)
+  {
+    std::cerr << it->first << std::endl;
+    for(int i = 0; i < it->second.size(); ++i)
+    {
+      std::cerr << it->second[i] << std::endl;
+      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
+      pcl::io::loadPCDFile(it->second[i], *cloud);
+
+      pcl::NormalEstimation<pcl::PointXYZRGBA, pcl::Normal> ne;
+      ne.setInputCloud(cloud);
+
+      pcl::search::KdTree<pcl::PointXYZRGBA>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGBA> ());
+      ne.setSearchMethod(tree);
+      pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
+      ne.setRadiusSearch(0.03);
+      ne.compute(*cloud_normals);
+
+      vfhEstimation.setInputCloud(cloud);
+      vfhEstimation.setInputNormals(cloud_normals);
+      vfhEstimation.setSearchMethod(tree);
+      pcl::PointCloud<pcl::VFHSignature308>::Ptr vfhs(new pcl::PointCloud<pcl::VFHSignature308> ());
+      vfhEstimation.compute(*vfhs);
+      std::vector<float> vfhsVec;
+      vfhsVec.resize(308);
+      for(size_t j = 0; j < 308; ++j)
+      {
+        vfhsVec[j] = vfhs->points[0].histogram[j];
+      }
+      vfh_features.push_back(std::pair<std::string, std::vector<float>>(it->first, vfhsVec));
+    }
+  }
+
+  std::cerr << "vfh_features size: " << vfh_features.size() << std::endl;
+  if(vfh_features.size() > 0)
+
+  {
+    flann::Matrix<float> data(new float[vfh_features.size()*vfh_features[0].second.size()],
+                              vfh_features.size(),
+                              vfh_features[0].second.size());
+    for(size_t i = 0; i < data.rows; ++i)
+      for(size_t j = 0; j < data.cols; ++j)
+      {
+        data[i][j] = vfh_features[i].second[j];
+      }
+    std::string packagePath = ros::package::getPath("rs_addons");
+    std::string savePath = packagePath +  "/data/extracted_feats/";
+    flann::save_to_file(data, savePath +  "/vfh_" + splitName + ".hdf5", "training_data");
+    std::ofstream fs;
+    fs.open(savePath + "/vfh_" + splitName + ".list");
+    for(size_t i = 0; i < vfh_features.size(); ++i)
+    {
+      fs << vfh_features[i].first << "\n";
+    }
+    fs.close();
+    flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
+    index.buildIndex();
+    index.save(savePath + "/vfh_kdtree_" + splitName + ".idx");
+    std::cerr << "Saved data to : " << savePath << std::endl;
+    delete[] data.ptr();
+  }
 }
 
 int main(int argc, char **argv)
@@ -157,7 +220,7 @@ int main(int argc, char **argv)
   FeatType ft;
   desc.add_options()
   ("help,h", "Print help messages")
-  ("split,s", po::value<std::string>(&split)->default_value("all.yaml"),
+  ("split,s", po::value<std::string>(&split)->default_value("all"),
    "split file to use")
   ("feature,f", po::value<std::string>(&feat)->default_value("CNN"),
    "choose feature to extract: [VFH|CVFH|CNN]");
@@ -189,7 +252,7 @@ int main(int argc, char **argv)
   std::string splitFilePath = split;
   if(!boost::filesystem::exists(boost::filesystem::path(split)))
   {
-    splitFilePath = packagePath + "/objects_dataset/splits/" +split+".yaml";
+    splitFilePath = packagePath + "/objects_dataset/splits/" + split + ".yaml";
   }
 
   std::cout << "Path to split file: " << splitFilePath << std::endl;
@@ -232,15 +295,17 @@ int main(int argc, char **argv)
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPNG, "_crop.png");
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPCD, ".pcd");
 
-  switch(ft) {
-      case CNN:
-        extractCNNFeature(modelFilesPNG,packagePath,split);
-        break;
-    case VFH:
-        extractVFHDescriptors(modelFilesPCD,split);
-      default:
-        std::cerr<<"This is weird"<<std::endl;
-    }
+  switch(ft)
+  {
+  case CNN:
+    extractCNNFeature(modelFilesPNG, packagePath, split);
+    break;
+  case VFH:
+    extractVFHDescriptors(modelFilesPCD, split);
+    break;
+  default:
+    std::cerr << "This is weird" << std::endl;
+  }
 
 
   return true;
