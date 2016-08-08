@@ -133,7 +133,8 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
     fs.close();
     flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
     index.buildIndex();
-    index.save(savePath + "/kdtree_"+splitName+".idx");
+    index.save(savePath + "/cnnfc7_kdtree_"+splitName+".idx");
+    std::cerr<<"Saved data to : "<<savePath<<std::endl;
     delete[] data.ptr();
   }
 

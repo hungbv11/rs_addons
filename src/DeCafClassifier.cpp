@@ -154,12 +154,13 @@ public:
       {
         outInfo("    " << j << " - " << models[k_indices[j]].first << " (" << k_indices[j] << ") with a distance of: " << k_distances[j] << " confidence: "<<(2-k_distances[j])/2);
       }
-      if(k_distances[0] < 0.65)
+      float confidence = (2-k_distances[0])/2;
+      if(confidence > 0.65)
       {
         rs::Detection detection = rs::create<rs::Detection>(tcas);
         detection.name.set(models[k_indices[0]].first);
         detection.source.set("DeCafClassifier");
-        detection.confidence.set((2-k_distances[0])/2);
+        detection.confidence.set(confidence);
         cluster.annotations.append(detection);
 
         rs::ImageROI image_roi = cluster.rois();
