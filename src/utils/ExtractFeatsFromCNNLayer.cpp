@@ -82,12 +82,13 @@ void getFiles(const std::string &path,
 }
 
 void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles,
-                       std::string packagePath)
+                       std::string resourcesPackagePath,
+                       std::string splitName)
 {
-  CaffeProxy caffeProxyObj(packagePath+CAFFE_MODEL_FILE,
-                           packagePath+CAFFE_TRAINED_FILE,
-                           packagePath+CAFFE_MEAN_FILE,
-                           packagePath+CAFFE_LABLE_FILE);
+  CaffeProxy caffeProxyObj(resourcesPackagePath+CAFFE_MODEL_FILE,
+                           resourcesPackagePath+CAFFE_TRAINED_FILE,
+                           resourcesPackagePath+CAFFE_MEAN_FILE,
+                           resourcesPackagePath+CAFFE_LABLE_FILE);
 
   std::vector<std::pair<std::string, std::vector<float> > > cnn_features;
 
@@ -110,6 +111,7 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
   }
   std::cerr << "cnn_features size: " << cnn_features.size() << std::endl;
   if(cnn_features.size() > 0)
+
   {
     flann::Matrix<float> data(new float[cnn_features.size()*cnn_features[0].second.size()],
                               cnn_features.size(),
@@ -120,10 +122,10 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
         data[i][j] = cnn_features[i].second[j];
       }
     std::string packagePath = ros::package::getPath("rs_addons");
-    std::string savePath = packagePath + TRAIN_DIR;
-    flann::save_to_file(data, savePath + "/cnnfc7.hdf5", "training_data");
+    std::string savePath = packagePath +  "/data/extracted_feats/";
+    flann::save_to_file(data, savePath +  "/cnnfc7_"+splitName+".hdf5", "training_data");
     std::ofstream fs;
-    fs.open(savePath + "/cnnfc7.list");
+    fs.open(savePath + "/cnnfc7_"+splitName+".list");
     for(size_t i = 0; i < cnn_features.size(); ++i)
     {
       fs << cnn_features[i].first << "\n";
@@ -131,10 +133,18 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
     fs.close();
     flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
     index.buildIndex();
-    index.save(savePath + "/kdtree.idx");
+    index.save(savePath + "/kdtree_"+splitName+".idx");
     delete[] data.ptr();
-
   }
+
+}
+
+void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles,std::string splitName)
+{
+
+  std::string packagePath = ros::package::getPath("rs_addons");
+  std::string savePath = packagePath +  "/data/extracted_feats/";
+  std::string fileName = "vfh_"+splitName;
 
 }
 
@@ -178,11 +188,10 @@ int main(int argc, char **argv)
   std::string splitFilePath = split;
   if(!boost::filesystem::exists(boost::filesystem::path(split)))
   {
-    splitFilePath = packagePath + "/objects_dataset/splits/" + split;
+    splitFilePath = packagePath + "/objects_dataset/splits/" +split+".yaml";
   }
 
   std::cout << "Path to split file: " << splitFilePath << std::endl;
-
 
   //label to file
   std::map<std::string, std::vector<std::string> > modelFilesPNG;
@@ -220,10 +229,14 @@ int main(int argc, char **argv)
   }
 
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPNG, "_crop.png");
+  getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPCD, ".pcd");
+
   switch(ft) {
       case CNN:
-        extractCNNFeature(modelFilesPNG,packagePath);
+        extractCNNFeature(modelFilesPNG,packagePath,split);
         break;
+    case VFH:
+        extractVFHDescriptors(modelFilesPCD,split);
       default:
         std::cerr<<"This is weird"<<std::endl;
     }
