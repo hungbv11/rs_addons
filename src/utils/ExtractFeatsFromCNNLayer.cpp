@@ -169,7 +169,10 @@ void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>>
 
       vfhEstimation.setInputCloud(cloud);
       vfhEstimation.setInputNormals(cloud_normals);
+      vfh.setNormalizeBins(true);
+      vfh.setNormalizeDistance(true);
       vfhEstimation.setSearchMethod(tree);
+
       pcl::PointCloud<pcl::VFHSignature308>::Ptr vfhs(new pcl::PointCloud<pcl::VFHSignature308> ());
       vfhEstimation.compute(*vfhs);
       std::vector<float> vfhsVec;
