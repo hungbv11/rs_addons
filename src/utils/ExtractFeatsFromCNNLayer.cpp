@@ -82,6 +82,37 @@ void getFiles(const std::string &path,
   }
 }
 
+void savetoFlann(const  std::vector<std::pair<std::string, std::vector<float> > > &features,
+                 std::string featName, std::string splitName)
+{
+  if(features.size() > 0)
+  {
+    flann::Matrix<float> data(new float[features.size()*features[0].second.size()],
+                              features.size(),
+                              features[0].second.size());
+    for(size_t i = 0; i < data.rows; ++i)
+      for(size_t j = 0; j < data.cols; ++j)
+      {
+        data[i][j] = features[i].second[j];
+      }
+    std::string packagePath = ros::package::getPath("rs_addons");
+    std::string savePath = packagePath +  "/data/extracted_feats/";
+    flann::save_to_file(data, savePath +  +"_" + splitName + ".hdf5", "training_data");
+    std::ofstream fs;
+    fs.open(savePath + featName + "_" + splitName + ".list");
+    for(size_t i = 0; i < features.size(); ++i)
+    {
+      fs << features[i].first << "\n";
+    }
+    fs.close();
+    flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
+    index.buildIndex();
+    index.save(savePath + featName + "_kdtree_" + splitName + ".idx");
+    std::cerr << "Saved data to : " << savePath << std::endl;
+    delete[] data.ptr();
+  }
+}
+
 void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles,
                        std::string resourcesPackagePath,
                        std::string splitName)
@@ -111,43 +142,14 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
     }
   }
   std::cerr << "cnn_features size: " << cnn_features.size() << std::endl;
-  if(cnn_features.size() > 0)
-
-  {
-    flann::Matrix<float> data(new float[cnn_features.size()*cnn_features[0].second.size()],
-                              cnn_features.size(),
-                              cnn_features[0].second.size());
-    for(size_t i = 0; i < data.rows; ++i)
-      for(size_t j = 0; j < data.cols; ++j)
-      {
-        data[i][j] = cnn_features[i].second[j];
-      }
-    std::string packagePath = ros::package::getPath("rs_addons");
-    std::string savePath = packagePath +  "/data/extracted_feats/";
-    flann::save_to_file(data, savePath +  "/cnnfc7_" + splitName + ".hdf5", "training_data");
-    std::ofstream fs;
-    fs.open(savePath + "/cnnfc7_" + splitName + ".list");
-    for(size_t i = 0; i < cnn_features.size(); ++i)
-    {
-      fs << cnn_features[i].first << "\n";
-    }
-    fs.close();
-    flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
-    index.buildIndex();
-    index.save(savePath + "/cnnfc7_kdtree_" + splitName + ".idx");
-    std::cerr << "Saved data to : " << savePath << std::endl;
-    delete[] data.ptr();
-  }
-
+  savetoFlann(cnn_features, "cnnfc7", splitName);
 }
 
 void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles, std::string splitName)
 {
-  //TODO: add preprocessing
+  //TODO: add preprocessing ?? e.g. smoothing, used to help
   pcl::VFHEstimation<pcl::PointXYZRGBA, pcl::Normal, pcl::VFHSignature308> vfhEstimation;
-
   std::vector<std::pair<std::string, std::vector<float> > > vfh_features;
-
   for(std::map<std::string, std::vector<std::string>>::const_iterator it = modelFiles.begin();
       it != modelFiles.end(); ++it)
   {
@@ -186,34 +188,10 @@ void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>>
   }
 
   std::cerr << "vfh_features size: " << vfh_features.size() << std::endl;
-  if(vfh_features.size() > 0)
-
-  {
-    flann::Matrix<float> data(new float[vfh_features.size()*vfh_features[0].second.size()],
-                              vfh_features.size(),
-                              vfh_features[0].second.size());
-    for(size_t i = 0; i < data.rows; ++i)
-      for(size_t j = 0; j < data.cols; ++j)
-      {
-        data[i][j] = vfh_features[i].second[j];
-      }
-    std::string packagePath = ros::package::getPath("rs_addons");
-    std::string savePath = packagePath +  "/data/extracted_feats/";
-    flann::save_to_file(data, savePath +  "/vfh_" + splitName + ".hdf5", "training_data");
-    std::ofstream fs;
-    fs.open(savePath + "/vfh_" + splitName + ".list");
-    for(size_t i = 0; i < vfh_features.size(); ++i)
-    {
-      fs << vfh_features[i].first << "\n";
-    }
-    fs.close();
-    flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
-    index.buildIndex();
-    index.save(savePath + "/vfh_kdtree_" + splitName + ".idx");
-    std::cerr << "Saved data to : " << savePath << std::endl;
-    delete[] data.ptr();
-  }
+  savetoFlann(vfh_features, "vfh", splitName);
 }
+
+
 
 int main(int argc, char **argv)
 {
