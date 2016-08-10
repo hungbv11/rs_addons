@@ -9,6 +9,7 @@ if(simtrack_nodes_FOUND)
 endif(simtrack_nodes_FOUND)
 
 find_package(Caffe QUIET)
+find_package(aruco QUIET)
 
 if(Caffe_FOUND)
   message(STATUS "OPTIONAL MODULE Caffe FOUND")
@@ -69,11 +70,10 @@ find_additional_files()
 #each containing a CMakeLists.txt here
 #add_subdirectory(src/xxx)
 
-if(simtrack_FOUND)
+if(simtrack_nodes_FOUND)
   rs_add_library(rs_simtrack src/SimtrackDetection.cpp)
-  target_link_libraries(rs_simtrack rs_core)
-  find_package(aruco QUIET)
-endif(simtrack_FOUND)
+  target_link_libraries(rs_simtrack ${catkin_LIBRARIES})
+endif(simtrack_nodes_FOUND)
 
 if(aruco_FOUND)
     message(STATUS "OPTIONAL MODULE aruco FOUND")
