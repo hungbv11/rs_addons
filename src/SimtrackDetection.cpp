@@ -207,7 +207,7 @@ private:
       for(size_t j = 0; j < indices.size(); ++j)
       {
         size_t index = indices[j];
-        cloudPtr->points[index].rgba = rs::common::colors[i % COLOR_SIZE];
+        cloudPtr->points[index].rgba = rs::common::colors[i % rs::common::numberOfColors];
       }
     }
 
