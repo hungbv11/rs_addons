@@ -97,7 +97,7 @@ void savetoFlann(const  std::vector<std::pair<std::string, std::vector<float> > 
       }
     std::string packagePath = ros::package::getPath("rs_addons");
     std::string savePath = packagePath +  "/data/extracted_feats/";
-    flann::save_to_file(data, savePath +  +"_" + splitName + ".hdf5", "training_data");
+    flann::save_to_file(data, savePath + featName + "_" + splitName + ".hdf5", "training_data");
     std::ofstream fs;
     fs.open(savePath + featName + "_" + splitName + ".list");
     for(size_t i = 0; i < features.size(); ++i)
@@ -113,16 +113,40 @@ void savetoFlann(const  std::vector<std::pair<std::string, std::vector<float> > 
   }
 }
 
+void savetoYaml(const std::vector<std::pair<std::string, std::vector<float> > > &features,
+                std::string featName, std::string splitName)
+{
+
+  if(!features.empty())
+  {
+    cv::FileStorage fs;
+    std::string packagePath = ros::package::getPath("rs_addons");
+    std::string savePath = packagePath +  "/data/extracted_feats/";
+    fs.open(savePath + featName + "_" + splitName + ".yaml.gz", cv::FileStorage::WRITE);
+    fs << "labels" << "[";
+    cv::Mat descriptors(features.size(), features[0].second.size(), CV_32F);
+    for(size_t i = 0; i < features.size(); ++i)
+    {
+      fs << features[i].first;
+      for(size_t j = 0; j < features[i].second.size(); ++j)
+      {
+        descriptors.at<float>(i, j) = features[i].second[j];
+      }
+    }
+    fs << "]";
+    fs << "Descriptors" << descriptors;
+    fs.release();
+  }
+}
+
 void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &modelFiles,
                        std::string resourcesPackagePath,
-                       std::string splitName)
+                       std::vector<std::pair<std::string, std::vector<float> > > &cnn_features)
 {
   CaffeProxy caffeProxyObj(resourcesPackagePath + CAFFE_MODEL_FILE,
                            resourcesPackagePath + CAFFE_TRAINED_FILE,
                            resourcesPackagePath + CAFFE_MEAN_FILE,
                            resourcesPackagePath + CAFFE_LABLE_FILE);
-
-  std::vector<std::pair<std::string, std::vector<float> > > cnn_features;
 
   for(std::map<std::string, std::vector<std::string>>::const_iterator it = modelFiles.begin();
       it != modelFiles.end(); ++it)
@@ -142,14 +166,13 @@ void extractCNNFeature(const std::map<std::string, std::vector<std::string>> &mo
     }
   }
   std::cerr << "cnn_features size: " << cnn_features.size() << std::endl;
-  savetoFlann(cnn_features, "cnnfc7", splitName);
 }
 
-void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles, std::string splitName)
+void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>> &modelFiles,
+                           std::vector<std::pair<std::string, std::vector<float> > > &vfh_features)
 {
   //TODO: add preprocessing ?? e.g. smoothing, used to help
   pcl::VFHEstimation<pcl::PointXYZRGBA, pcl::Normal, pcl::VFHSignature308> vfhEstimation;
-  std::vector<std::pair<std::string, std::vector<float> > > vfh_features;
   for(std::map<std::string, std::vector<std::string>>::const_iterator it = modelFiles.begin();
       it != modelFiles.end(); ++it)
   {
@@ -188,7 +211,7 @@ void extractVFHDescriptors(const std::map<std::string, std::vector<std::string>>
   }
 
   std::cerr << "vfh_features size: " << vfh_features.size() << std::endl;
-  savetoFlann(vfh_features, "vfh", splitName);
+
 }
 
 
@@ -197,14 +220,16 @@ int main(int argc, char **argv)
 {
 
   po::options_description desc("Allowed options");
-  std::string split, feat;
+  std::string split, feat, saveTo;
   FeatType ft;
   desc.add_options()
   ("help,h", "Print help messages")
   ("split,s", po::value<std::string>(&split)->default_value("all"),
    "split file to use")
   ("feature,f", po::value<std::string>(&feat)->default_value("CNN"),
-   "choose feature to extract: [VFH|CVFH|CNN]");
+   "choose feature to extract: [VFH|CVFH|CNN]")
+  ("saveTo,o", po::value<std::string>(&saveTo)->default_value("FLANN"),
+   "choose output format : [YAML|FLANN]");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -231,16 +256,23 @@ int main(int argc, char **argv)
   std::string packagePath = ros::package::getPath("rs_resources");
 
   std::string splitFilePath = split;
+  std::string splitName;
   if(!boost::filesystem::exists(boost::filesystem::path(split)))
   {
     splitFilePath = packagePath + "/objects_dataset/splits/" + split + ".yaml";
+    splitName = split;
+  }
+  else
+  {
+    splitName = split.substr(split.find_last_of("/")+1, split.find_last_of(".")-split.find_last_of("/")-1);
   }
 
   std::cout << "Path to split file: " << splitFilePath << std::endl;
-
+  std::cout << "Name of split: " << splitName << std::endl;
   //label to file
   std::map<std::string, std::vector<std::string> > modelFilesPNG;
   std::map<std::string, std::vector<std::string> > modelFilesPCD;
+
 
   cv::FileStorage fs;
   fs.open(splitFilePath, cv::FileStorage::READ);
@@ -276,18 +308,33 @@ int main(int argc, char **argv)
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPNG, "_crop.png");
   getFiles(packagePath + TRAIN_DIR, objectToLabel, modelFilesPCD, ".pcd");
 
+
+  //Extract the feat descriptors
+  std::vector<std::pair<std::string, std::vector<float> > > descriptors;
   switch(ft)
   {
   case CNN:
-    extractCNNFeature(modelFilesPNG, packagePath, split);
+    extractCNNFeature(modelFilesPNG, packagePath, descriptors);
+
     break;
   case VFH:
-    extractVFHDescriptors(modelFilesPCD, split);
+    extractVFHDescriptors(modelFilesPCD, descriptors);
     break;
   default:
     std::cerr << "This is weird" << std::endl;
   }
 
+  //save to disk
+  if(saveTo == "FLANN")
+  {
+    std::cerr << "Saving as Flann" << std::endl;
+    savetoFlann(descriptors, feat, splitName);
+  }
+  else if(saveTo == "YAML")
+  {
+    std::cerr << "Saving as Yaml" << std::endl;
+    savetoYaml(descriptors, feat, splitName);
+  }
 
   return true;
 }
