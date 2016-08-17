@@ -228,6 +228,8 @@ private:
           cv::Rect roi, roiHires;
           cv::Mat mask, maskHires;
 
+          createImageRoi(indices, roi, roiHires, mask, maskHires);
+
           rs::ImageROI imageRoi = rs::create<rs::ImageROI>(tcas);
           imageRoi.mask(rs::conversion::to(tcas, mask));
           imageRoi.mask_hires(rs::conversion::to(tcas, maskHires));
