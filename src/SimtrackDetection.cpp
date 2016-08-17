@@ -62,6 +62,45 @@ private:
   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> bbClouds;
   double pointSize;
 
+
+  void createImageRoi(const pcl::PointIndices &indices,
+                      cv::Rect &roi, cv::Rect &roiHires,
+                      cv::Mat &mask, cv::Mat &maskHires)
+  {
+
+
+    size_t width = cloudPtr->width;
+    size_t height = cloudPtr->height;
+
+    int min_x = width;
+    int max_x = -1;
+    int min_y = height;
+    int max_y = -1;
+
+    cv::Mat mask_full = cv::Mat::zeros(height, width, CV_8U);
+
+    // get min / max extents (rectangular bounding box in image (pixel) coordinates)
+    //#pragma omp parallel for
+    for(size_t i = 0; i < indices.indices.size(); ++i)
+    {
+      const int idx = indices.indices[i];
+      const int x = idx % width;
+      const int y = idx / width;
+
+      min_x = std::min(min_x, x);
+      min_y = std::min(min_y, y);
+      max_x = std::max(max_x, x);
+      max_y = std::max(max_y, y);
+
+      mask_full.at<uint8_t>(y, x) = 255;
+    }
+
+    roi = cv::Rect(min_x, min_y, max_x - min_x + 1, max_y - min_y + 1);
+    roiHires = cv::Rect(roi.x << 1, roi.y << 1, roi.width << 1, roi.height << 1);
+    mask_full(roi).copyTo(mask);
+    cv::resize(mask, maskHires, cv::Size(0, 0), 2.0, 2.0, cv::INTER_NEAREST);
+  }
+
 public:
 
   SimtrackDetection() : DrawingAnnotator(__func__), nh("~"),
@@ -139,6 +178,8 @@ private:
           tf::Stamped<tf::Pose> poseWorld(poseCam * camToWorld, camToWorld.stamp_, camToWorld.frame_id_);
           poseAnnotation.camera.set(rs::conversion::to(tcas, poseCam));
           poseAnnotation.world.set(rs::conversion::to(tcas, poseWorld));
+          poseAnnotation.source.set("Simtrack");
+
           simtrackCluster.annotations.append(detection);
           simtrackCluster.annotations.append(poseAnnotation);
 
@@ -184,12 +225,15 @@ private:
           rs::PointIndices uimaIndices = rs::conversion::to(tcas, indices);
           rcp.indices.set(uimaIndices);
 
-          //          rs::ImageROI imageRoi = rs::create<rs::ImageROI>(tcas);
-          //          imageRoi.mask(rs::conversion::to(tcas, cluster.mask));
-          //          imageRoi.mask_hires(rs::conversion::to(tcas, cluster.maskHires));
-          //          imageRoi.roi(rs::conversion::to(tcas, cluster.roi));
-          //          imageRoi.roi_hires(rs::conversion::to(tcas, cluster.roiHires));
-          //          simtrackCluster.rois.set(imageRoi);
+          cv::Rect roi, roiHires;
+          cv::Mat mask, maskHires;
+
+          rs::ImageROI imageRoi = rs::create<rs::ImageROI>(tcas);
+          imageRoi.mask(rs::conversion::to(tcas, mask));
+          imageRoi.mask_hires(rs::conversion::to(tcas, maskHires));
+          imageRoi.roi(rs::conversion::to(tcas, roi));
+          imageRoi.roi_hires(rs::conversion::to(tcas, roiHires));
+          simtrackCluster.rois.set(imageRoi);
 
           simtrackCluster.points.set(rcp);
 
