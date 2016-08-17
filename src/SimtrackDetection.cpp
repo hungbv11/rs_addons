@@ -125,6 +125,7 @@ private:
           simtrack_nodes::SimtrackDetection &simtrackDetection = srv.response.detections.at(i);
           outInfo("Found object: " << simtrackDetection.model_name);
           rs::Cluster simtrackCluster = rs::create<rs::Cluster>(tcas);
+          simtrackCluster.source.set("Simtrack");
           rs::PoseAnnotation poseAnnotation = rs::create<rs::PoseAnnotation>(tcas);
           rs::Detection detection = rs::create<rs::Detection>(tcas);
 
@@ -174,15 +175,27 @@ private:
           Eigen::Vector4f max_pt;
 
           pcl::getMinMax3D(*bb_cloud_transformed, min_pt, max_pt);
-          std::vector<int> indices;
-          pcl::getPointsInBox(*transformedCloud, min_pt, max_pt, indices);
-          outInfo("Inidices ofund: " << indices.size());
-          std::stringstream name;
-          name << "cloud_" << i << ".pcd";
-//          pcl::PCDWriter writer;
-//          writer.writeASCII<PointT>(name.str(), *transformedCloud, indices);
-          detectionIndices.push_back(indices);
-          //scene.identifiables.append(simtrackCluster);
+          pcl::PointIndices indices;
+          pcl::getPointsInBox(*transformedCloud, min_pt, max_pt, indices.indices);
+          outInfo("Indices found: " << indices.indices.size());
+
+          rs::ReferenceClusterPoints rcp = rs::create<rs::ReferenceClusterPoints>(tcas);
+
+          rs::PointIndices uimaIndices = rs::conversion::to(tcas, indices);
+          rcp.indices.set(uimaIndices);
+
+          //          rs::ImageROI imageRoi = rs::create<rs::ImageROI>(tcas);
+          //          imageRoi.mask(rs::conversion::to(tcas, cluster.mask));
+          //          imageRoi.mask_hires(rs::conversion::to(tcas, cluster.maskHires));
+          //          imageRoi.roi(rs::conversion::to(tcas, cluster.roi));
+          //          imageRoi.roi_hires(rs::conversion::to(tcas, cluster.roiHires));
+          //          simtrackCluster.rois.set(imageRoi);
+
+          simtrackCluster.points.set(rcp);
+
+          scene.identifiables.append(simtrackCluster);
+
+          detectionIndices.push_back(indices.indices);
         }
       }
     }
