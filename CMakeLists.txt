@@ -22,6 +22,7 @@ find_package(catkin REQUIRED robosherlock
   message_generation
   message_runtime
   ${OPTIONAL_simtrack}
+  tf_conversions
 )
 
 ################################################################################
