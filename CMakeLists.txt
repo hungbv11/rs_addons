@@ -93,8 +93,88 @@ if(Caffe_FOUND)
   target_link_libraries(extractfeats ${PCL_LIBRARIES} ${catkin_LIBRARIES} ${Caffe_LIBRARIES})
   
   rs_add_library(rs_caffeClassification src/CaffeClassificationAnnotator.cpp)
-  target_link_libraries(rs_caffeClassification ${catkin_LIBRARIES})
+  target_link_libraries(rs_caffeClassification ${catkin_LIBRARIES} ${Caffe_LIBRARIES})
 
   rs_add_library(rs_deCafClassifier src/DeCafClassifier.cpp)
-  target_link_libraries(rs_deCafClassifier ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+  target_link_libraries(rs_deCafClassifier ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Caffe_LIBRARIES})
+endif(Caffe_FOUND)
+
+
+
+
+rs_add_library(rs_rSSvmAnnotator src/RSSvmAnnotator.cpp
+                               src/RSClassifier.cpp 
+                               src/RSSVM.cpp)
+
+target_link_libraries(rs_rSSvmAnnotator ${CATKIN_LIBRARIES}
+                                       ${OpenCV_LIBRARIES}
+                                        ${Boost_LIBRARIES}
+                                        ${PCL_LIBRARIES}
+                                                     )
+
+
+
+
+rs_add_library(rs_rSRFAnnotator src/RSRFAnnotator.cpp
+                               src/RSClassifier.cpp
+                               src/RSRF.cpp )
+target_link_libraries(rs_rSRFAnnotator ${CATKIN_LIBRARIES}
+                                       ${OpenCV_LIBRARIES}
+                                       ${Boost_LIBRARIES}
+                                        ${PCL_LIBRARIES})
+
+                                    rs_add_library(rs_rSKNNAnnotator src/RSKNNAnnotator.cpp
+                                                                   src/RSClassifier.cpp
+                                                                   src/RSKNN.cpp )
+
+                                    target_link_libraries(rs_rSKNNAnnotator ${CATKIN_LIBRARIES}
+                                                                           ${OpenCV_LIBRARIES}
+                                                                            ${Boost_LIBRARIES}
+                                                                            ${PCL_LIBRARIES})
+
+
+
+
+                                     rs_add_library(rs_rSGBAnnotator src/RSGBAnnotator.cpp
+                                                                   src/RSClassifier.cpp
+                                                                   src/RSGBT.cpp)
+
+                                     target_link_libraries(rs_rSGBAnnotator ${CATKIN_LIBRARIES}
+                                                                           ${OpenCV_LIBRARIES}
+                                                                            ${Boost_LIBRARIES}
+                                                                            ${PCL_LIBRARIES})
+
+
+
+
+ rs_add_library(rs_trainerAnnotator src/trainerAnnotator.cpp
+                               src/RSClassifier.cpp 
+                               src/RSRF.cpp
+                               src/RSSVM.cpp
+                               src/RSGBT.cpp
+                               src/RSKNN.cpp)
+
+target_link_libraries(rs_trainerAnnotator ${CATKIN_LIBRARIES}
+                                       ${OpenCV_LIBRARIES}
+                                        ${Boost_LIBRARIES}
+                                        ${PCL_LIBRARIES})
+
+rs_add_library(rs_classifyOfflineAnnotator src/classifyOfflineAnnotator.cpp
+                               src/RSClassifier.cpp 
+                               src/RSRF.cpp
+                               src/RSSVM.cpp
+                               src/RSGBT.cpp
+                               src/RSKNN.cpp)
+
+target_link_libraries(rs_classifyOfflineAnnotator ${CATKIN_LIBRARIES}
+                                       ${OpenCV_LIBRARIES}
+                                        ${Boost_LIBRARIES}
+                                        ${PCL_LIBRARIES})
+
+
+
+
+if(Caffe_FOUND)
+add_executable(featureExtractor src/ext/featureExtractor.cpp)
+target_link_libraries(featureExtractor ${PCL_LIBRARIES} ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${Caffe_LIBRARIES} )
 endif(Caffe_FOUND)

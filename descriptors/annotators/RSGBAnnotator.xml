@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+  <primitive>true</primitive>
+  <annotatorImplementationName>rs_rSGBAnnotator</annotatorImplementationName>
+  <analysisEngineMetaData>
+    <name>RSGBAnnotator</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters>
+
+<!--which should be CL (classify) or GT (groundTruth)  -->
+    <configurationParameter>
+        <name>set_mode</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
+
+    <configurationParameter>
+        <name>trained_model_name</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
+
+    <configurationParameter>
+        <name>actual_class_label</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
+
+</configurationParameters>
+    <configurationParameterSettings>
+
+<!--which should be CL (classify) or GT (groundTruth)  -->
+<nameValuePair>
+    <name>set_mode</name>
+    <value>
+        <string>TODO</string>
+    </value>
+  </nameValuePair>
+
+<nameValuePair>
+    <name>trained_model_name</name>
+    <value>
+        <string>TODO_eee_ddkg</string>
+    </value>
+  </nameValuePair>
+
+<nameValuePair>
+    <name>actual_class_label</name>
+    <value>
+        <string>TODO</string>
+    </value>
+  </nameValuePair>
+
+
+
+    </configurationParameterSettings>
+    <typeSystemDescription>
+        <imports>
+            <import location="../typesystem/all_types.xml"/>
+        </imports>
+    </typeSystemDescription>
+    <capabilities>
+        <capability>
+            <inputs/>
+            <outputs/>
+            <languagesSupported>
+                <language>x-unspecified</language>
+            </languagesSupported>
+        </capability>
+    </capabilities>
+    <operationalProperties>
+        <modifiesCas>true</modifiesCas>
+        <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+        <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+</taeDescription>

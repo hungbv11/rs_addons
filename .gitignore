@@ -1,0 +1,10 @@
+*.md~
+*.user
+*.user~
+*.cpp~
+*.xml~
+*.h~
+*.gitignore~
+*.txt~
+*.yaml~
+trainedData
