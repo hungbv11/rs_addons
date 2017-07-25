@@ -624,12 +624,12 @@ int main(int argc, char **argv)
     std::string split_name,storageInput, feat,dataset_name;
     desc.add_options()
     ("help,h", "Print help messages")
-    ("split file name,s", po::value<std::string>(& split_name)->default_value("breakfast3"),
-     "enter the object file name")
+    ("split,s", po::value<std::string>(& split_name)->default_value("breakfast3"),
+     "enter the split file name")
     ("storageInput,i", po::value<std::string>(& storageInput)->default_value("partial_views"),
-    "enter storage folder of IAI dataset")
-    ("Enter datasets use,d", po::value<std::string>(&dataset_name)->default_value("IAI"),
-            "choose the database: [IAI|WU|BOTH]")
+    "enter input storage folder name. If want to use both storages at once provide folders name as iaiStorageFolder/wuStorageFolder")
+    ("datasets,d", po::value<std::string>(&dataset_name)->default_value("IAI"),
+            "choose the dataset: [IAI|WU|BOTH]")
     ("feature,f", po::value<std::string>(&feat)->default_value("CNN"),
      "choose feature to extract: [CNN|VGG16|VFH|CVFH]");
 

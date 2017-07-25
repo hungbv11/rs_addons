@@ -36,8 +36,8 @@
                      
                       feat: It should be CNN or VGG16 (RGB data) and VFH or CVFH (for RGB-D data).
 
-            The above command should generate following files in rs_learning/data folder. So check
-            data folder is there, if not create one and name it as data. 
+            The above command should generate following files in rs_resources/objects_dataset/extractedFeat folder. So check
+            the folder called extractedFeat is there or not, if not create one and name it as extractedFeat. 
                           
                           1. datasetName_feat_ClassLabel_splitName.txt 
                           
@@ -74,7 +74,7 @@
     If someone wants to create the TrainedModel of the data for specific classifer,
     should first provide the following parameter's value in trainerAnnotator.xml
     file. It will genarate a TrainedModel file as datasetName_feat_classifier_typeModel_ObjectOur.yaml
-    in rs_learning/data/trainedData folder. 
+    in rs_addons/trainedData folder. 
                      
                       1. classifier_type: It's value should be rssvm (for support vector mechine) or
                                           rsrf (for random forest) or rsgbt (for gradient boost tree) or
@@ -95,7 +95,7 @@
                             rosrun robosherlock run model_trainer
   
                then as output IAI_CNN_rssvmModel_ObjectOur should be generated 
-               in rs_learning/trainedData folder. 
+               in rs_addons/trainedData folder. 
                         
 #########################################################################                       
    # Classify Image Module: 
