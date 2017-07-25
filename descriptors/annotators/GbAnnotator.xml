@@ -2,41 +2,38 @@
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>rs_rSSvmAnnotator</annotatorImplementationName>
+  <annotatorImplementationName>rs_gbAnnotator</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>RSSvmAnnotator</name>
+    <name>GbAnnotator</name>
     <description/>
     <version>1.0</version>
     <vendor/>
-
-<configurationParameters>
+    <configurationParameters>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
-<configurationParameter>
-    <name>set_mode</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
+    <configurationParameter>
+        <name>set_mode</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
 
-<configurationParameter>
-    <name>trained_model_name</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
+    <configurationParameter>
+        <name>trained_model_name</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
 
-<configurationParameter>
-    <name>actual_class_label</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
+    <configurationParameter>
+        <name>actual_class_label</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+    </configurationParameter>
 
 </configurationParameters>
-
-
-<configurationParameterSettings>
+    <configurationParameterSettings>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
 <nameValuePair>
@@ -49,7 +46,7 @@
 <nameValuePair>
     <name>trained_model_name</name>
     <value>
-        <string>TO_eee_ddkg</string>
+        <string>TODO_eee_ddkg</string>
     </value>
   </nameValuePair>
 
@@ -61,10 +58,9 @@
   </nameValuePair>
 
 
-</configurationParameterSettings>
 
-
-  <typeSystemDescription>
+    </configurationParameterSettings>
+    <typeSystemDescription>
         <imports>
             <import location="../typesystem/all_types.xml"/>
         </imports>

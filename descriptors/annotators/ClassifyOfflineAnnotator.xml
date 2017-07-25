@@ -4,7 +4,7 @@
   <primitive>true</primitive>
   <annotatorImplementationName>rs_classifyOfflineAnnotator</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>classifyOfflineAnnotator</name>
+    <name>ClassifyOfflineAnnotator</name>
     <description/>
     <version>1.0</version>
     <vendor/>

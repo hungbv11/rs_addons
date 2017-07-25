@@ -2,13 +2,14 @@
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>rs_rSRFAnnotator</annotatorImplementationName>
+  <annotatorImplementationName>rs_svmAnnotator</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>RSRFAnnotator</name>
+    <name>SvmAnnotator</name>
     <description/>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters>
+
+<configurationParameters>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
 <configurationParameter>
@@ -34,34 +35,36 @@
 
 </configurationParameters>
 
- <configurationParameterSettings>
+
+<configurationParameterSettings>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
 <nameValuePair>
     <name>set_mode</name>
     <value>
-        <string>GT</string>
+        <string>TODO</string>
     </value>
   </nameValuePair>
 
 <nameValuePair>
     <name>trained_model_name</name>
     <value>
-        <string>IAI_CNN_rsrfModel_breakfast1</string>
+        <string>TO_eee_ddkg</string>
     </value>
   </nameValuePair>
 
 <nameValuePair>
     <name>actual_class_label</name>
     <value>
-        <string>IAI_CNN_ClassLabel_breakfast1</string>
+        <string>TODO</string>
     </value>
   </nameValuePair>
 
 
-  </configurationParameterSettings>
+</configurationParameterSettings>
 
-     <typeSystemDescription>
+
+  <typeSystemDescription>
         <imports>
             <import location="../typesystem/all_types.xml"/>
         </imports>

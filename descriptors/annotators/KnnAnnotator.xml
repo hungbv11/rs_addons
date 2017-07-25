@@ -2,65 +2,83 @@
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>rs_trainerAnnotator</annotatorImplementationName>
+  <annotatorImplementationName>rs_knnAnnotator</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>trainerAnnotator</name>
+    <name>KnnAnnotator</name>
     <description/>
     <version>1.0</version>
     <vendor/>
     <configurationParameters>
 
-<!-- classifier type should be rssvm, rsrf, rsgbt, rsknn  -->
-      <configurationParameter>
-          <name>classifier_type</name>
-          <type>string</type>
-          <multiValued>false</multiValued>
-          <mandatory>false</mandatory>
-      </configurationParameter>
 
+
+<!--which should be CL (classify) or GT (groundTruth)  -->
 <configurationParameter>
-    <name>train_data_name</name>
+    <name>set_mode</name>
+    <type>string</type>
+    <multiValued>false</multiValued>
+    <mandatory>false</mandatory>
+</configurationParameter>
+
+<!-- Have to be given when work with rsknn -->
+<configurationParameter>
+    <name>trainKNN_matrix</name>
     <type>string</type>
     <multiValued>false</multiValued>
     <mandatory>false</mandatory>
 </configurationParameter>
 
 <configurationParameter>
-    <name>train_label_name</name>
+    <name>trainKNNLabel_matrix</name>
     <type>string</type>
     <multiValued>false</multiValued>
     <mandatory>false</mandatory>
 </configurationParameter>
 
-</configurationParameters>
+<configurationParameter>
+    <name>actual_class_label</name>
+    <type>string</type>
+    <multiValued>false</multiValued>
+    <mandatory>false</mandatory>
+</configurationParameter>
 
 
+    </configurationParameters>
     <configurationParameterSettings>
 
-  <!-- classifier_type should be rssvm, rsrf, rsgbt, rsknn  -->
+<!--which should be CL (classify) or GT (groundTruth)  -->
 <nameValuePair>
-   <name>classifier_type</name>
-   <value>
-       <string>rsrf</string>
-   </value>
-</nameValuePair>
+    <name>set_mode</name>
+    <value>
+        <string>CL</string>
+    </value>
+  </nameValuePair>
 
- <!-- train_data_name and train_label_name can be found in rs_learning/data folder  -->
-<nameValuePair>
-   <name>train_data_name</name>
-   <value>
-       <string>IAI_CNN_MatTrain_breakfast1</string>
-   </value>
-</nameValuePair>
 
 <nameValuePair>
-   <name>train_label_name</name>
-   <value>
-       <string>IAI_CNN_MatTrainLabel_breakfast1</string>
-   </value>
+ <name>trainKNN_matrix</name>
+ <value>
+     <string>IAI_CNN_INS_MatTrain_obj_10_our</string>
+ </value>
 </nameValuePair>
 
-  </configurationParameterSettings>
+<nameValuePair>
+ <name>trainKNNLabel_matrix</name>
+ <value>
+     <string>IAI_CNN_INS_MatTrainLabel_obj_10_our</string>
+ </value>
+</nameValuePair>
+
+<nameValuePair>
+    <name>actual_class_label</name>
+    <value>
+        <string>IAI_CNN_INS_ClassLabel_obj_10_our</string>
+    </value>
+  </nameValuePair>
+
+
+    </configurationParameterSettings>
+
     <typeSystemDescription>
         <imports>
             <import location="../typesystem/all_types.xml"/>

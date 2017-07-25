@@ -2,65 +2,66 @@
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>rs_rSGBAnnotator</annotatorImplementationName>
+  <annotatorImplementationName>rs_rfAnnotator</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>RSGBAnnotator</name>
+    <name>RfAnnotator</name>
     <description/>
     <version>1.0</version>
     <vendor/>
     <configurationParameters>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
-    <configurationParameter>
-        <name>set_mode</name>
-        <type>string</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-    </configurationParameter>
+<configurationParameter>
+    <name>set_mode</name>
+    <type>string</type>
+    <multiValued>false</multiValued>
+    <mandatory>false</mandatory>
+</configurationParameter>
 
-    <configurationParameter>
-        <name>trained_model_name</name>
-        <type>string</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-    </configurationParameter>
+<configurationParameter>
+    <name>trained_model_name</name>
+    <type>string</type>
+    <multiValued>false</multiValued>
+    <mandatory>false</mandatory>
+</configurationParameter>
 
-    <configurationParameter>
-        <name>actual_class_label</name>
-        <type>string</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-    </configurationParameter>
+<configurationParameter>
+    <name>actual_class_label</name>
+    <type>string</type>
+    <multiValued>false</multiValued>
+    <mandatory>false</mandatory>
+</configurationParameter>
 
 </configurationParameters>
-    <configurationParameterSettings>
+
+ <configurationParameterSettings>
 
 <!--which should be CL (classify) or GT (groundTruth)  -->
 <nameValuePair>
     <name>set_mode</name>
     <value>
-        <string>TODO</string>
+        <string>GT</string>
     </value>
   </nameValuePair>
 
 <nameValuePair>
     <name>trained_model_name</name>
     <value>
-        <string>TODO_eee_ddkg</string>
+        <string>IAI_CNN_rsrfModel_breakfast1</string>
     </value>
   </nameValuePair>
 
 <nameValuePair>
     <name>actual_class_label</name>
     <value>
-        <string>TODO</string>
+        <string>IAI_CNN_ClassLabel_breakfast1</string>
     </value>
   </nameValuePair>
 
 
+  </configurationParameterSettings>
 
-    </configurationParameterSettings>
-    <typeSystemDescription>
+     <typeSystemDescription>
         <imports>
             <import location="../typesystem/all_types.xml"/>
         </imports>
