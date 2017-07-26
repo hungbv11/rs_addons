@@ -143,7 +143,7 @@
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>my_demo</name>
-    <description>Simple pipeline for demo</description>
+    <description>Simple pipeline for classifing data coming from robosherlock pipeline using different classifiers</description>
     <version>1.0</version>
     <vendor/>
     <configurationParameters searchStrategy="none">
@@ -278,17 +278,12 @@
       <node>ClusterMerger</node>
       <node>PCLDescriptorExtractor</node>
       <node>CaffeAnnotator</node>
-
-   <node>RSRFAnnotator</node>  
- <!--  <node>RSSvmAnnotator1</node>  -->
- <!--   <node>RSSvmAnnotator</node>  -->
- <!--  <node>RSGBAnnotator</node>  -->
-<!--    <node>RSKNNAnnotator</node>  -->
-
-   <node>StorageWriter</node>  
-
+      <node>RfAnnotator</node>  
+ <!-- <node>SvmAnnotator</node>  -->
+ <!-- <node>GbAnnotator</node>  -->
+<!--  <node>KnnAnnotator</node>  -->
+      <node>StorageWriter</node>  
 <!--  <node>ResultAdvertiser</node>  -->
-
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>

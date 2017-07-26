@@ -22,7 +22,7 @@
 using namespace uima;
 
 
-class trainerAnnotator : public Annotator
+class TrainerAnnotator : public Annotator
 {
 private:
 
@@ -102,4 +102,4 @@ public:
 };
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(trainerAnnotator)
+MAKE_AE(TrainerAnnotator)

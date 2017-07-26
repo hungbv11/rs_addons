@@ -21,7 +21,7 @@
 #include <rs/DrawingAnnotator.h>
 using namespace uima;
 
-class RSGBAnnotator : public DrawingAnnotator
+class GbAnnotator : public DrawingAnnotator
 {
 private:
 
@@ -50,7 +50,7 @@ private:
 
 public:
 
-  RSGBAnnotator(): DrawingAnnotator(__func__){
+  GbAnnotator(): DrawingAnnotator(__func__){
 
  }
 
@@ -283,6 +283,6 @@ public:
 };
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(RSGBAnnotator)
+MAKE_AE(GbAnnotator)
 
 

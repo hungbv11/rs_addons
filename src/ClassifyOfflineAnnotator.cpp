@@ -21,7 +21,7 @@
 using namespace uima;
 
 
-class classifyOfflineAnnotator : public Annotator
+class ClassifyOfflineAnnotator : public Annotator
 {
 private:
 
@@ -121,4 +121,4 @@ public:
 };
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(classifyOfflineAnnotator)
+MAKE_AE(ClassifyOfflineAnnotator)

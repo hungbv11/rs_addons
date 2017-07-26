@@ -23,7 +23,7 @@
 #include <rs/DrawingAnnotator.h>
 using namespace uima;
 
-class RSKNNAnnotator: public DrawingAnnotator
+class KnnAnnotator: public DrawingAnnotator
 {
 private:
 
@@ -53,7 +53,7 @@ private:
 
 public:
 
-  RSKNNAnnotator(): DrawingAnnotator(__func__){
+  KnnAnnotator(): DrawingAnnotator(__func__){
 
  }
 
@@ -294,4 +294,4 @@ public:
 
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(RSKNNAnnotator)
+MAKE_AE(KnnAnnotator)

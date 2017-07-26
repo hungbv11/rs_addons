@@ -20,7 +20,7 @@
 #include <rs/DrawingAnnotator.h>
 using namespace uima;
 
-class RSRFAnnotator : public DrawingAnnotator
+class RfAnnotator : public DrawingAnnotator
 {
 private:
 
@@ -49,7 +49,7 @@ private:
 
 public:
 
-  RSRFAnnotator(): DrawingAnnotator(__func__){
+  RfAnnotator(): DrawingAnnotator(__func__){
 
  }
 
@@ -284,4 +284,4 @@ public:
 
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(RSRFAnnotator)
+MAKE_AE(RfAnnotator)

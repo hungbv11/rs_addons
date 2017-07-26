@@ -27,7 +27,7 @@
 using namespace uima;
 
 
-class RSSvmAnnotator :  public DrawingAnnotator
+class SvmAnnotator :  public DrawingAnnotator
 {
 private:
 
@@ -60,7 +60,7 @@ public:
 
   RSClassifier* svmObject= new RSSVM;
 
-  RSSvmAnnotator(): DrawingAnnotator(__func__)
+  SvmAnnotator(): DrawingAnnotator(__func__)
   {
 
   }
@@ -286,4 +286,4 @@ public:
 };
 
 // This macro exports an entry point that is used to create the annotator.
-MAKE_AE(RSSvmAnnotator)
+MAKE_AE(SvmAnnotator)
