@@ -262,11 +262,9 @@
     <string>Breakfast1Annotated</string>
   </value>
 </nameValuePair>
+</configurationParameterSettings>
 
-
-
-    </configurationParameterSettings>
-    <flowConstraints>
+  <flowConstraints>
       <fixedFlow>
       <node>CollectionReader</node>
       <node>ImagePreprocessor</node>
@@ -282,8 +280,8 @@
  <!-- <node>SvmAnnotator</node>  -->
  <!-- <node>GbAnnotator</node>  -->
 <!--  <node>KnnAnnotator</node>  -->
-      <node>StorageWriter</node>  
-<!--  <node>ResultAdvertiser</node>  -->
+<!--      <node>StorageWriter</node> --> 
+  <node>ResultAdvertiser</node> 
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>

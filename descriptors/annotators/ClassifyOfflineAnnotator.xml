@@ -8,142 +8,137 @@
     <description/>
     <version>1.0</version>
     <vendor/>
+    
     <configurationParameters>
-
-  <!-- classifier type should be rssvm, rsrf, rsgbt, rsknn  -->
-              <configurationParameter>
-                  <name>classifier_type</name>
-                  <type>string</type>
-                  <multiValued>false</multiValued>
-                  <mandatory>false</mandatory>
-              </configurationParameter>
-
-<configurationParameter>
-    <name>trained_model_name</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
-
-
-        <configurationParameter>
-            <name>test_data_name</name>
-            <type>string</type>
-            <multiValued>false</multiValued>
-            <mandatory>false</mandatory>
+     
+      <configurationParameter>
+        <name>classifier_type</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
         </configurationParameter>
 
-    <configurationParameter>
-      <name>test_label_name</name>
+      <configurationParameter>
+        <name>trained_model_name</name>
         <type>string</type>
-       <multiValued>false</multiValued>
-      <mandatory>false</mandatory>
-    </configurationParameter>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
 
-<configurationParameter>
-  <name>actual_class_label</name>
-    <type>string</type>
-   <multiValued>false</multiValued>
-  <mandatory>false</mandatory>
-</configurationParameter>
+      <configurationParameter>
+        <name>test_data_name</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
 
-<!-- Have to be given when work with rsknn -->
-<configurationParameter>
-    <name>trainData_matrix</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
+      <configurationParameter>
+        <name>test_label_name</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
 
-<configurationParameter>
-    <name>trainLabel_matrix</name>
-    <type>string</type>
-    <multiValued>false</multiValued>
-    <mandatory>false</mandatory>
-</configurationParameter>
+      <configurationParameter>
+        <name>actual_class_label</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+   
+      <configurationParameter>
+        <name>trainData_matrix</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
 
-
+      <configurationParameter>
+        <name>trainLabel_matrix</name>
+        <type>string</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
     </configurationParameters>
 
-<configurationParameterSettings>
+    <configurationParameterSettings>
+      
+      <nameValuePair>
+        <name>classifier_type</name>
+        <description>classifier_type should be rssvm, rsrf, rsgbt, rsknn</description> 
+        <value>     
+          <string>rsrf</string>
+        </value>
+      </nameValuePair>
 
+      <nameValuePair>
+        <name>trained_model_name</name>
+        <description>train_model_name can be found in path /rs_addons/trainedData/ </description> 
+        <value>   
+          <string>IAI_CNN_rsrfModel_breakfast1</string>
+        </value>
+      </nameValuePair>
 
-<!-- classifier_type should be rssvm, rsrf, rsgbt, rsknn  -->
-<nameValuePair>
- <name>classifier_type</name>
- <value>
-     <string>rsrf</string>
- </value>
-</nameValuePair>
+      <nameValuePair>
+        <name>test_data_name</name>
+        <description>test_data_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
+        <value>
+          <string>IAI_CNN_MatTest_breakfast1</string>
+        </value>
+      </nameValuePair>
 
+      <nameValuePair>
+        <name>test_label_name</name>
+        <description>test_label_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
+        <value>       
+          <string>IAI_CNN_MatTestLabel_breakfast1</string>
+        </value>
+      </nameValuePair>
 
-<!-- train_model_name can be found in rs_learning/trainedData  -->
-<nameValuePair>
- <name>trained_model_name</name>
- <value>
-     <string>IAI_CNN_rsrfModel_breakfast1</string>
- </value>
-</nameValuePair>
+      <nameValuePair>
+        <name>actual_class_label</name>
+        <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/,
+            which is object to class map </description> 
+        <value>      
+          <string>IAI_CNN_ClassLabel_breakfast1</string>
+        </value>
+      </nameValuePair>
 
-<!-- test_data_name and test_label_name and actual_class_label can be found in rs_resources/objects_dataset/extractedFeat/ folder  -->
-<nameValuePair>
- <name>test_data_name</name>
- <value>
-     <string>IAI_CNN_MatTest_breakfast1</string>
- </value>
-</nameValuePair>
+       <description>If classifier_type is rsknn instead of trained_model_name provide the following two parameters </description>
+      <nameValuePair>
+        <name>trainData_matrix</name>
+        <description>trainData_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description> 
+        <value>
+          <string>IAI_CNN_INS_MatTrain_obj_10_our</string>
+        </value>
+      </nameValuePair>
 
-<nameValuePair>
- <name>test_label_name</name>
- <value>
-     <string>IAI_CNN_MatTestLabel_breakfast1</string>
- </value>
-</nameValuePair>
-
-<nameValuePair>
- <name>actual_class_label</name>
- <value>
-     <string>IAI_CNN_ClassLabel_breakfast1</string>
- </value>
-</nameValuePair>
-
-<!-- if classifier is rsknn instead of trained_model_name provide the following two parameters  -->
-
-<nameValuePair>
- <name>trainData_matrix</name>
- <value>
-     <string>IAI_CNN_INS_MatTrain_obj_10_our</string>
- </value>
-</nameValuePair>
-
-<nameValuePair>
- <name>trainLabel_matrix</name>
- <value>
-     <string>IAI_CNN_INS_MatTrainLabel_obj_10_our</string>
- </value>
-</nameValuePair>
-
-
-</configurationParameterSettings>
-
-<typeSystemDescription>
-        <imports>
-            <import location="../typesystem/all_types.xml"/>
-        </imports>
+      <nameValuePair>
+        <name>trainLabel_matrix</name>
+        <description>trainLabel_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description> 
+        <value>
+          <string>IAI_CNN_INS_MatTrainLabel_obj_10_our</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription>
+      <imports>
+      <import location="../typesystem/all_types.xml"/>
+      </imports>
     </typeSystemDescription>
     <capabilities>
-        <capability>
-            <inputs/>
-            <outputs/>
-            <languagesSupported>
-                <language>x-unspecified</language>
-            </languagesSupported>
-        </capability>
+      <capability>
+        <inputs/>
+        <outputs/>
+          <languagesSupported>
+            <language>x-unspecified</language>
+          </languagesSupported>
+      </capability>
     </capabilities>
     <operationalProperties>
-        <modifiesCas>true</modifiesCas>
-        <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
-        <outputsNewCASes>false</outputsNewCASes>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
     </operationalProperties>
   </analysisEngineMetaData>
 </taeDescription>
