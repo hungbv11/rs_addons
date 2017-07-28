@@ -90,7 +90,7 @@ void RSGBT:: classify(std::string trained_file_name_saved, std::string test_matr
     int actual_convert = lab;
     actual_label.push_back(actual_convert);
   }
-  std::cout << "Random forest Result :" << std::endl;
+  std::cout << "Gradient Boost Tree Result :" << std::endl;
   evaluation(actual_label, predicted_label, obj_classInDouble);
 
 }

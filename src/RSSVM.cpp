@@ -95,9 +95,9 @@ void RSSVM::classify (std::string trained_file_name_saved,
     double lab = con_test_label[i];
     int actual_convert= lab;
     actual_label.push_back(actual_convert);
-    std::cout<<"predicted class is::"<<prediction <<std::endl;
+    //std::cout<<"predicted class is::"<<prediction <<std::endl;
   }
-  std::cout<<"Result of SVM :"<<std::endl;
+  std::cout<<"Result of Support Vector Machine :"<<std::endl;
   evaluation(actual_label, predicted_label, obj_classInDouble );
 }
 

@@ -275,11 +275,11 @@
       <node>PointCloudClusterExtractor</node>
       <node>ClusterMerger</node>
       <node>PCLDescriptorExtractor</node>
-      <node>CaffeAnnotator</node>
-      <node>RfAnnotator</node>  
- <!-- <node>SvmAnnotator</node>  -->
- <!-- <node>GbAnnotator</node>  -->
-<!--  <node>KnnAnnotator</node>  -->
+      <node>CaffeAnnotator</node> 
+ <!--     <node>RfAnnotator</node>   -->  
+  <!--    <node>SvmAnnotator</node> -->
+       <node>GbAnnotator</node>  
+  <!--    <node>KnnAnnotator</node> -->
 <!--      <node>StorageWriter</node> --> 
   <node>ResultAdvertiser</node> 
       </fixedFlow>

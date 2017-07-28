@@ -30,20 +30,22 @@ void RSClassifier::setLabels(std::string file_name, std::vector<std::string> &my
   std::string savePath = packagePath + "/objects_dataset/extractedFeat/";
 
   //To check the resource path................................................
-  if(!boost::filesystem::exists(savePath))
+  if(!boost::filesystem::exists(savePath+file_name+".txt"))
   {
-    std::cout<<"Folder called extractedFeat is not found in path rs_resources/objects_dataset/extractedFeat/  to read the class label from .txt file >>>"<<std::endl;
-  }
-
-  std::ifstream file((savePath+file_name+".txt").c_str());
-
-  std::string str;
-  std::vector<std::string> split_str;
-
-  while(std::getline(file ,str))
+    outError(file_name <<" file does not exist in path "<<savePath<<" to read the object's class label."<<std::endl);
+  } 
+  else
   {
-    boost::split(split_str,str,boost::is_any_of(":"));
-    my_annotation.push_back(split_str[0]);
+    std::ifstream file((savePath+file_name+".txt").c_str());
+
+    std::string str;
+    std::vector<std::string> split_str;
+
+    while(std::getline(file ,str))
+    {
+      boost::split(split_str,str,boost::is_any_of(":"));
+      my_annotation.push_back(split_str[0]);
+    }
   }
 }
 
@@ -93,7 +95,7 @@ void RSClassifier::evaluation(std::vector<int> test_label, std::vector<int> pred
 
   if(!boost::filesystem::exists(resourcePath + lebel_path))
   {
-    outError(obj_classInDouble <<" file is not found in /rs_resources/objects_dataset/extractedFeat/ " << std::endl);
+    outError(obj_classInDouble <<" file does not exist in path "<<resourcePath + lebel_path << std::endl);
   };
 
   //To read the object class names from rs_resources/object_dataset/objects.txt.......
@@ -143,6 +145,11 @@ std::string RSClassifier::saveOrLoadTrained(std::string trained_file_name)
   }
   else
   {
+     if(!boost::filesystem::exists(packagePath + save_train + trained_file_name + ".xml"))
+    {
+      outError(trained_file_name <<" trained Model file does not exist in path "<< packagePath + save_train <<std::endl);
+    } 
+    
     a = packagePath + save_train + trained_file_name + ".xml";
   }
   return a;

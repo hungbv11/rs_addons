@@ -67,7 +67,7 @@
         <name>classifier_type</name>
         <description>classifier_type should be rssvm, rsrf, rsgbt, rsknn</description> 
         <value>     
-          <string>rsrf</string>
+          <string>rsknn</string>
         </value>
       </nameValuePair>
 
@@ -75,7 +75,7 @@
         <name>trained_model_name</name>
         <description>train_model_name can be found in path /rs_addons/trainedData/ </description> 
         <value>   
-          <string>IAI_CNN_rsrfModel_breakfast1</string>
+          <string>IAI_VFH_rssvmModel_breakfast1shape</string>
         </value>
       </nameValuePair>
 
@@ -83,7 +83,7 @@
         <name>test_data_name</name>
         <description>test_data_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
         <value>
-          <string>IAI_CNN_MatTest_breakfast1</string>
+          <string>IAI_VFH_MatTest_breakfast1shape</string>
         </value>
       </nameValuePair>
 
@@ -91,7 +91,7 @@
         <name>test_label_name</name>
         <description>test_label_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
         <value>       
-          <string>IAI_CNN_MatTestLabel_breakfast1</string>
+          <string>IAI_VFH_MatTestLabel_breakfast1shape</string>
         </value>
       </nameValuePair>
 
@@ -100,7 +100,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/,
             which is object to class map </description> 
         <value>      
-          <string>IAI_CNN_ClassLabel_breakfast1</string>
+          <string>IAI_VFH_ClassLabel_breakfast1shape</string>
         </value>
       </nameValuePair>
 
@@ -109,7 +109,7 @@
         <name>trainData_matrix</name>
         <description>trainData_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description> 
         <value>
-          <string>IAI_CNN_INS_MatTrain_obj_10_our</string>
+          <string>IAI_VFH_MatTrain_breakfast1shape</string>
         </value>
       </nameValuePair>
 
@@ -117,7 +117,7 @@
         <name>trainLabel_matrix</name>
         <description>trainLabel_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description> 
         <value>
-          <string>IAI_CNN_INS_MatTrainLabel_obj_10_our</string>
+          <string>IAI_VFH_MatTrainLabel_breakfast1shape</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
