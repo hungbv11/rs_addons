@@ -1,3 +1,13 @@
+*.md~
+*.user
+*.user~
+*.cpp~
+*.xml~
+*.h~
+*.gitignore~
+*.txt~
+*.yaml~
+trainedData
 cmake
 
 CMakeLists.txt.user*
