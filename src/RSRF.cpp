@@ -31,7 +31,7 @@ void RSRF:: trainModel(std::string train_matrix_name, std::string train_label_na
   std::cout << "size of train matrix:" << train_matrix.size() << std::endl;
   std::cout << "size of train label:" << train_label.size() << std::endl;
 
-  std::string pathToSaveModel= saveOrLoadTrained(trained_file_name);
+  std::string pathToSaveModel= saveTrained(trained_file_name);
 
   if(!pathToSaveModel.empty())
   {
@@ -60,7 +60,7 @@ void RSRF:: trainModel(std::string train_matrix_name, std::string train_label_na
     rtree->train(train_matrix, CV_ROW_SAMPLE, train_label, cv::Mat(), cv::Mat(), var_type, cv::Mat(), params);
 
     //To save the trained data.............................
-    rtree->save((saveOrLoadTrained(trained_file_name)).c_str());
+    rtree->save((pathToSaveModel).c_str());
   }
 }
 
@@ -75,7 +75,7 @@ void RSRF:: classify(std::string trained_file_name_saved, std::string test_matri
   CvRTrees *vrtree = new CvRTrees;
 
   //To load the trained data................................
-  vrtree->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  vrtree->load((loadTrained(trained_file_name_saved)).c_str());
 
   //convert test label matrix into a vector.......................
   std::vector<double> con_test_label;
@@ -106,7 +106,7 @@ void RSRF::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test_
   CvRTrees *vrtree = new CvRTrees;
 
   //To load the trained data................................
-  vrtree->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  vrtree->load((loadTrained(trained_file_name_saved)).c_str());
   double res = vrtree->predict(test_mat, cv::Mat());
   std::cout << "predicted class is :" << res << std::endl;
   det = res;

@@ -30,7 +30,7 @@ void RSGBT:: trainModel(std::string train_matrix_name, std::string train_label_n
   readDescriptorAndLabel(train_matrix_name, train_label_name, train_matrix, train_label);
   std::cout << "size of train matrix:" << train_matrix.size() << std::endl;
   std::cout << "size of train label:" << train_label.size() << std::endl;
-  std::string pathToSaveModel= saveOrLoadTrained(trained_file_name);
+  std::string pathToSaveModel= saveTrained(trained_file_name);
 
   if(!pathToSaveModel.empty())
   {
@@ -56,7 +56,7 @@ void RSGBT:: trainModel(std::string train_matrix_name, std::string train_label_n
     gbtree->train(train_matrix, CV_ROW_SAMPLE, train_label, cv::Mat(), cv::Mat(), var_type, cv::Mat(), params);
 
     //To save the trained data.............................
-    gbtree->save((saveOrLoadTrained(trained_file_name)).c_str());
+    gbtree->save((pathToSaveModel).c_str());
   }
 }
 
@@ -71,7 +71,7 @@ void RSGBT:: classify(std::string trained_file_name_saved, std::string test_matr
   CvGBTrees *brtree = new CvGBTrees;
 
   //To load the trained model
-  brtree->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  brtree->load((loadTrained(trained_file_name_saved)).c_str());
 
   //Convert test label matrix into a vector.......................
   std::vector<double> con_test_label;
@@ -103,7 +103,7 @@ void RSGBT::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test
   CvGBTrees *urtree = new CvGBTrees;
 
   //To load the trained data................................
-  urtree->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  urtree->load((loadTrained(trained_file_name_saved)).c_str());
   double res = urtree->predict(test_mat, cv::Mat());
   std::cout << "prediction class is :" << res << std::endl;
   det = res;

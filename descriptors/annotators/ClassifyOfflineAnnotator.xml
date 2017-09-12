@@ -67,7 +67,7 @@
         <name>classifier_type</name>
         <description>classifier_type should be rssvm, rsrf, rsgbt, rsknn</description> 
         <value>     
-          <string>rsknn</string>
+          <string>rsrf</string>
         </value>
       </nameValuePair>
 
@@ -75,7 +75,7 @@
         <name>trained_model_name</name>
         <description>train_model_name can be found in path /rs_addons/trainedData/ </description> 
         <value>   
-          <string>IAI_VFH_rssvmModel_breakfast1shape</string>
+          <string>IAI_CNN_rsrfModel_objects</string>
         </value>
       </nameValuePair>
 
@@ -83,7 +83,7 @@
         <name>test_data_name</name>
         <description>test_data_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
         <value>
-          <string>IAI_VFH_MatTest_breakfast1shape</string>
+          <string>IAI_CNN_MatTest_objects</string>
         </value>
       </nameValuePair>
 
@@ -91,7 +91,7 @@
         <name>test_label_name</name>
         <description>test_label_name can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>
         <value>       
-          <string>IAI_VFH_MatTestLabel_breakfast1shape</string>
+          <string>IAI_CNN_MatTestLabel_objects</string>
         </value>
       </nameValuePair>
 
@@ -100,7 +100,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/,
             which is object to class map </description> 
         <value>      
-          <string>IAI_VFH_ClassLabel_breakfast1shape</string>
+          <string>IAI_CNN_ClassLabel_objects</string>
         </value>
       </nameValuePair>
 

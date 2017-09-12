@@ -88,14 +88,14 @@ else(aruco_FOUND)
 endif(aruco_FOUND)
 
 if(Caffe_FOUND)
-    add_executable(featureExtractor src/ext/FeatureExtractor.cpp)
-    target_link_libraries(featureExtractor
-        ${PCL_LIBRARIES}
-        ${catkin_LIBRARIES}
-        ${OpenCV_LIBRARIES}
-        ${Boost_LIBRARIES}
-        ${Caffe_LIBRARIES}
-        )
+   ## add_executable(featureExtractor src/ext/FeatureExtractor.cpp)
+   ## target_link_libraries(featureExtractor
+   ##     ${PCL_LIBRARIES}
+   ##     ${catkin_LIBRARIES}
+   ##     ${OpenCV_LIBRARIES}
+   ##     ${Boost_LIBRARIES}
+   ##     ${Caffe_LIBRARIES}
+   ##     )
     rs_add_library(rs_caffeClassification src/CaffeClassificationAnnotator.cpp)
     target_link_libraries(rs_caffeClassification
         ${catkin_LIBRARIES}

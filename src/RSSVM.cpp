@@ -29,7 +29,7 @@ void RSSVM::trainModel(std::string train_matrix_name, std::string train_label_na
   std::cout<<"size of train matrix:"<<train_matrix.size()<<std::endl;
   std::cout<<"size of train label:"<<train_label.size()<<std::endl;
 
-  std::string pathToSaveModel= saveOrLoadTrained(trained_file_name);
+  std::string pathToSaveModel= saveTrained(trained_file_name);
 
   if(!pathToSaveModel.empty())
   {
@@ -72,7 +72,7 @@ void RSSVM::classify (std::string trained_file_name_saved,
   CvSVM* your_svm=new CvSVM ;
 
   //To load the trained model..............................
-  your_svm->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  your_svm->load((loadTrained(trained_file_name_saved)).c_str());
 
   //To count the support vector................................
   int in= your_svm->get_support_vector_count();
@@ -109,7 +109,7 @@ void RSSVM::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test
   CvSVM* your_svm=new CvSVM ;
 
   //To load the trained model..............................
-  your_svm->load((saveOrLoadTrained(trained_file_name_saved)).c_str());
+  your_svm->load((loadTrained(trained_file_name_saved)).c_str());
 
   //To count the support vector................................
   int in= your_svm->get_support_vector_count();

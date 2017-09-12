@@ -38,7 +38,8 @@ public:
 
   void readDescriptorAndLabel(std::string matrix_name, std::string label_name, cv::Mat &des_matrix, cv::Mat &des_label);
   
-  std::string saveOrLoadTrained(std::string trained_file_name);
+  std::string saveTrained(std::string trained_file_name);
+   std::string loadTrained(std::string trained_file_name);
   
   void evaluation(std::vector<int> test_label, std::vector<int> predicted_label,std::string obj_classInDouble);
 

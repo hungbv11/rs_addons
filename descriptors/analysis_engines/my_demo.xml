@@ -259,7 +259,7 @@
 <nameValuePair>
   <name>storagedb</name>
   <value>
-    <string>Breakfast1Annotated</string>
+    <string>Break1CnnCL</string>
   </value>
 </nameValuePair>
 </configurationParameterSettings>
@@ -275,12 +275,13 @@
       <node>PointCloudClusterExtractor</node>
       <node>ClusterMerger</node>
       <node>PCLDescriptorExtractor</node>
-      <node>CaffeAnnotator</node> 
- <!--     <node>RfAnnotator</node>   -->  
-  <!--    <node>SvmAnnotator</node> -->
-       <node>GbAnnotator</node>  
+      <node>CaffeAnnotator</node>
+      <node>Cluster3DGeometryAnnotator</node> 
+      <node>RfAnnotator</node>    
+   <!--   <node>SvmAnnotator</node> --> 
+   <!--   <node>GbAnnotator</node>  -->  
   <!--    <node>KnnAnnotator</node> -->
-<!--      <node>StorageWriter</node> --> 
+      <node>StorageWriter</node>  
   <node>ResultAdvertiser</node> 
       </fixedFlow>
     </flowConstraints>

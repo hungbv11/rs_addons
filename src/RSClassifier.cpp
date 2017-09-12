@@ -130,8 +130,8 @@ void RSClassifier::evaluation(std::vector<int> test_label, std::vector<int> pred
   std::cout << "classifier Accuray:" << Accuracy << std::endl;
 }
 
-//To save or load trained model frmom path in rs_addons/trainedData....
-std::string RSClassifier::saveOrLoadTrained(std::string trained_file_name)
+//To save trained model frmom path in rs_addons/trainedData....
+std::string RSClassifier::saveTrained(std::string trained_file_name)
 {
   std::string packagePath;
   std::string save_train = "trainedData/";
@@ -145,13 +145,28 @@ std::string RSClassifier::saveOrLoadTrained(std::string trained_file_name)
   }
   else
   {
-     if(!boost::filesystem::exists(packagePath + save_train + trained_file_name + ".xml"))
-    {
-      outError(trained_file_name <<" trained Model file does not exist in path "<< packagePath + save_train <<std::endl);
-    } 
-    
     a = packagePath + save_train + trained_file_name + ".xml";
   }
+  return a;
+}
+
+//To load trained model frmom path in rs_addons/trainedData....
+std::string RSClassifier::loadTrained(std::string trained_file_name)
+{
+  std::string packagePath;
+  std::string save_train = "trainedData/";
+  std::string a;
+  packagePath = ros::package::getPath("rs_addons") + '/';
+
+  if(!boost::filesystem::exists(packagePath + save_train + trained_file_name + ".xml"))
+  {
+      outError(trained_file_name <<" trained Model file does not exist in path "<< packagePath + save_train <<std::endl);
+  } 
+  else
+  {
+    a = packagePath + save_train + trained_file_name + ".xml";
+  }
+
   return a;
 }
 
