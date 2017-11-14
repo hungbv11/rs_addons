@@ -7,6 +7,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/features/vfh.h>
 #include <pcl/features/normal_3d.h>
+#include <pcl/search/impl/kdtree.hpp>
 
 #include <flann/flann.h>
 #include <flann/io/hdf5.h>
