@@ -107,7 +107,7 @@ void savetoFlann(const  std::vector<std::pair<std::string, std::vector<float> > 
     fs.close();
     flann::Index<flann::ChiSquareDistance<float> > index(data, flann::LinearIndexParams());
     index.buildIndex();
-    index.save(savePath + featName + "_kdtree_" + splitName + ".idx");
+    index.save(savePath + featName + "_" + splitName + ".idx");
     std::cerr << "Saved data to : " << savePath << std::endl;
     delete[] data.ptr();
   }
