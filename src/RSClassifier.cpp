@@ -203,12 +203,13 @@ void  RSClassifier::processPCLFeature(std::string memory_name,std::string set_mo
       }
       outInfo("number of elements in :" << i << std::endl);
       double classLabel;
-      obj_VFH->classifyOnLiveData(memory_name, test_mat, classLabel);
+      double confi;
+      obj_VFH->classifyOnLiveData(memory_name, test_mat, classLabel, confi);
       int classLabelInInt = classLabel;
       std::string classLabelInString = models_label[classLabelInInt-1];
 
       //To annotate the clusters..................
-      RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode);
+      RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode, confi);
 
       //set roi on image
       rs::ImageROI image_roi = cluster.rois.get();
@@ -247,6 +248,7 @@ void  RSClassifier::processCaffeFeature(std::string memory_name, std::string set
       //variable to store caffe feature..........
       cv::Mat featDescriptor;
       double classLabel;
+      double confi;
 
       if(feats.source()=="Caffe")
       {
@@ -254,14 +256,14 @@ void  RSClassifier::processCaffeFeature(std::string memory_name, std::string set
         outInfo("Size after conversion:" << featDescriptor.size());
 
         //The function generate the prediction result................
-        obj_caffe->classifyOnLiveData(memory_name, featDescriptor, classLabel);
+        obj_caffe->classifyOnLiveData(memory_name, featDescriptor, classLabel,confi);
 
         //class label in integer, which is used as index of vector model_label.
         int classLabelInInt = classLabel;
         std::string classLabelInString = models_label[classLabelInInt-1];
 
         //To annotate the clusters..................
-        RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode);
+        RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode, confi);
 
         //set roi on image
         rs::ImageROI image_roi = cluster.rois.get();

@@ -37,7 +37,7 @@ void RSKNN:: classify(std::string trained_file_name_saved, std::string test_matr
 {
 }
 
-void RSKNN::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test_mat, double &det)
+void RSKNN::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test_mat, double &det, double &confi)
 {
 }
 
@@ -149,12 +149,13 @@ void  RSKNN::processPCLFeatureKNN(std::string train_matrix_name,std::string trai
       outInfo("number of elements in :" << i << std::endl);
 
       double classLabel;
+      double confi;
       obj_VFH->classifyOnLiveDataKNN(train_matrix_name, train_label_name, test_mat, classLabel);
       int classLabelInInt = classLabel;
       std::string classLabelInString = models_label[classLabelInInt-1];
 
       //To annotate the clusters..................
-      RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode);
+      RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode, confi);
 
       //set roi on image
       rs::ImageROI image_roi = cluster.rois.get();
@@ -203,10 +204,11 @@ void  RSKNN::processCaffeFeatureKNN(std::string train_matrix_name,std::string tr
 
         //class label in integer, which is used as index of vector model_label.
         int classLabelInInt = classLabel;
+        double confi;
         std::string classLabelInString = models_label[classLabelInInt-1];
 
         //To annotate the clusters..................
-        RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode);
+        RsAnnotation (tcas,classLabelInString,feature_use, dataset_use, cluster,set_mode, confi);
 
         //set roi on image
         rs::ImageROI image_roi = cluster.rois.get();
@@ -221,7 +223,7 @@ void  RSKNN::processCaffeFeatureKNN(std::string train_matrix_name,std::string tr
   }
 }
 
-void RSKNN::RsAnnotation(uima::CAS &tcas, std::string class_name, std::string feature_name, std::string database_name, rs::Cluster &cluster, std::string set_mode)
+void RSKNN::RsAnnotation(uima::CAS &tcas, std::string class_name, std::string feature_name, std::string database_name, rs::Cluster &cluster, std::string set_mode, double &confi)
 {
   rs::Classification classResult = rs::create<rs::Classification>(tcas);
   classResult.classname.set(class_name);

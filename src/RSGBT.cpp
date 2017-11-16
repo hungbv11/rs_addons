@@ -95,7 +95,7 @@ void RSGBT:: classify(std::string trained_file_name_saved, std::string test_matr
 
 }
 
-void RSGBT::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test_mat, double &det)
+void RSGBT::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test_mat, double &det, double &confi)
 {
   //To load the test data and it's label.............................
   std::cout << "size of test matrix :" << test_mat.size() << std::endl;
@@ -109,7 +109,7 @@ void RSGBT::classifyOnLiveData(std::string trained_file_name_saved, cv::Mat test
   det = res;
 }
 
-void RSGBT::RsAnnotation(uima::CAS &tcas, std::string class_name, std::string feature_name, std::string database_name, rs::Cluster &cluster, std::string set_mode)
+void RSGBT::RsAnnotation(uima::CAS &tcas, std::string class_name, std::string feature_name, std::string database_name, rs::Cluster &cluster, std::string set_mode, double &confi)
 {
   rs::Classification classResult = rs::create<rs::Classification>(tcas);
   classResult.classname.set(class_name);
