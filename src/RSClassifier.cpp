@@ -214,8 +214,8 @@ void  RSClassifier::processPCLFeature(std::string memory_name,std::string set_mo
       //set roi on image
       rs::ImageROI image_roi = cluster.rois.get();
       cv::Rect rect;
-      rs::conversion::from(image_roi.roi_hires.get(), rect);
-
+      //rs::conversion::from(image_roi.roi_hires.get(), rect);
+      rs::conversion::from(image_roi.roi.get(), rect);
       //Draw result on image...........
       obj_VFH->drawCluster(color, rect, classLabelInString);
 
@@ -268,8 +268,8 @@ void  RSClassifier::processCaffeFeature(std::string memory_name, std::string set
         //set roi on image
         rs::ImageROI image_roi = cluster.rois.get();
         cv::Rect rect;
-        rs::conversion::from(image_roi.roi_hires.get(), rect);
-
+        //rs::conversion::from(image_roi.roi_hires.get(), rect);
+        rs::conversion::from(image_roi.roi.get(), rect);
         //Draw result on image...........................
         obj_caffe->drawCluster(color, rect, classLabelInString);
       }

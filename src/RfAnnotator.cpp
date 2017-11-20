@@ -89,7 +89,7 @@ public:
     outInfo("RSRFAnnotator is running:"<<std::endl);
     rs::SceneCas cas(tcas);
     rs::Scene scene = cas.getScene();
-    cas.get(VIEW_COLOR_IMAGE_HD, color);
+    cas.get(VIEW_COLOR_IMAGE, color);
     std::vector<rs::Cluster> clusters;
     scene.identifiables.filter(clusters);
 
