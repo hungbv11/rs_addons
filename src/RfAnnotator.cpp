@@ -235,6 +235,7 @@ public:
     }
 
     outInfo("calculation is done with RSRF"<<std::endl);
+    cas.set(VIEW_CLASIFIED_IMAGE, color);
     return UIMA_ERR_NONE;
   }
 
