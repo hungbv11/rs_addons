@@ -92,6 +92,7 @@ public:
     cas.get(VIEW_COLOR_IMAGE, color);
     std::vector<rs::Cluster> clusters;
     scene.identifiables.filter(clusters);
+    outInfo("number of cluster: " << clusters.size());
 
     if(set_mode =="CL")
     {

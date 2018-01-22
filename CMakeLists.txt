@@ -88,14 +88,49 @@ else(aruco_FOUND)
 endif(aruco_FOUND)
 
 if(Caffe_FOUND)
-   ## add_executable(featureExtractor src/ext/FeatureExtractor.cpp)
-   ## target_link_libraries(featureExtractor
-   ##     ${PCL_LIBRARIES}
-   ##     ${catkin_LIBRARIES}
-   ##     ${OpenCV_LIBRARIES}
-   ##     ${Boost_LIBRARIES}
-   ##     ${Caffe_LIBRARIES}
-   ##     )
+     add_executable(feExt src/ext/fExtractor.cpp)
+     target_link_libraries(feExt
+         ${PCL_LIBRARIES}
+         ${catkin_LIBRARIES}
+         ${OpenCV_LIBRARIES}
+         ${Boost_LIBRARIES}
+         ${Caffe_LIBRARIES}
+         )
+
+     add_executable(DbExt src/ext/DbExt.cpp)
+     target_link_libraries(DbExt
+         ${PCL_LIBRARIES}
+         ${catkin_LIBRARIES}
+         ${OpenCV_LIBRARIES}
+         ${Boost_LIBRARIES}
+         ${Caffe_LIBRARIES}
+         )
+      
+     add_executable(DbExtA src/ext/DbExtA.cpp)
+     target_link_libraries(DbExtA
+         ${PCL_LIBRARIES}
+         ${catkin_LIBRARIES}
+         ${OpenCV_LIBRARIES}
+         ${Boost_LIBRARIES}
+         ${Caffe_LIBRARIES}
+         )
+     add_executable(DesConcat src/ext/DesConcat.cpp)
+     target_link_libraries(DesConcat
+         ${PCL_LIBRARIES}
+         ${catkin_LIBRARIES}
+         ${OpenCV_LIBRARIES}
+         ${Boost_LIBRARIES}
+         ${Caffe_LIBRARIES}
+         )
+
+     add_executable(FeatureExtractor src/ext/FeatureExtractor.cpp)
+     target_link_libraries(FeatureExtractor
+         ${PCL_LIBRARIES}
+         ${catkin_LIBRARIES}
+         ${OpenCV_LIBRARIES}
+         ${Boost_LIBRARIES}
+         ${Caffe_LIBRARIES}
+         )
     rs_add_library(rs_caffeClassification src/CaffeClassificationAnnotator.cpp)
     target_link_libraries(rs_caffeClassification
         ${catkin_LIBRARIES}

@@ -183,6 +183,7 @@ void RSRF::RsAnnotation(uima::CAS &tcas, std::string class_name, std::string fea
 
     if(set_mode == "CL")
     {
+      outInfo("Setting annotation to cluster");
       cluster.annotations.append(classResult);
     }
     else if(set_mode == "GT")
