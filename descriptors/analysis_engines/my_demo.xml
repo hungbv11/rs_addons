@@ -209,17 +209,15 @@
     <parameter>StorageWriter/storagedb</parameter>
   </overrides>
 </configurationParameter>
+</configurationParameters>
 
-<!--end--> 
-
-    </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
         <name>camera_config_files</name>
         <value>
           <array>
-         <!--   <string>config_kinect_robot.ini</string>  -->
-           <string>config_mongodb_playback.ini</string>  
+           <string>config_kinect_robot.ini</string> 
+           <!-- <string>config_mongodb_playback.ini</string>    -->
           </array>
         </value>
       </nameValuePair>
@@ -249,7 +247,7 @@
       <nameValuePair>
         <name>minSize</name>
         <value>
-            <integer>1200</integer>
+            <integer>2000</integer>
         </value>
       </nameValuePair>
 
@@ -259,13 +257,14 @@
 <nameValuePair>
   <name>storagedb</name>
   <value>
-    <string>Break1CnnCL</string>
+    <string>Kit1Mttkit25badkit20badCnnRfCl</string>
   </value>
 </nameValuePair>
 </configurationParameterSettings>
 
   <flowConstraints>
       <fixedFlow>
+      <node>Trigger</node>
       <node>CollectionReader</node>
       <node>ImagePreprocessor</node>
       <node>RegionFilter</node>
@@ -277,11 +276,11 @@
       <node>PCLDescriptorExtractor</node>
       <node>CaffeAnnotator</node>
       <node>Cluster3DGeometryAnnotator</node> 
-      <node>RfAnnotator</node>    
-   <!--   <node>SvmAnnotator</node> --> 
+      <node>RfAnnotator</node>  
+   <!--   <node>SvmAnnotator</node>  -->  
    <!--   <node>GbAnnotator</node>  -->  
-  <!--    <node>KnnAnnotator</node> -->
-      <node>StorageWriter</node>  
+   <!--    <node>KnnAnnotator</node> -->
+      <node>StorageWriter</node> 
   <node>ResultAdvertiser</node> 
       </fixedFlow>
     </flowConstraints>

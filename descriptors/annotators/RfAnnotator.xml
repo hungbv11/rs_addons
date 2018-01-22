@@ -48,7 +48,7 @@
         <name>trained_model_name</name>
         <description>train_model_name can be found in path /rs_addons/trainedData/ </description>
         <value>        
-          <string>IAI_CNN_rsrfModel_objects</string>
+          <string>IAI_CNN_rsrfModel_tango</string>
         </value>
       </nameValuePair>
 
@@ -57,7 +57,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/,
         which is object to class map </description> 
         <value>   
-          <string>IAI_CNN_ClassLabel_objects</string>
+          <string>IAI_CNN_ClassLabel_tango_dumb_objects</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
@@ -69,10 +69,15 @@
     <capabilities>
       <capability>
         <inputs/>
-        <outputs/>
-          <languagesSupported>
-            <language>x-unspecified</language>
-          </languagesSupported>
+        <outputs>
+          <type allAnnotatorFeatures="true">rs.annotation.Detection</type>
+          <type allAnnotatorFeatures="true">rs.annotation.Classification</type>
+        </outputs>
+        <inputSofas>
+          <sofaName>rs.annotation.Features</sofaName>
+          <sofaName>rs.scene.MergedCluster</sofaName>
+        </inputSofas>
+        <languagesSupported/>
       </capability>
     </capabilities>
     <operationalProperties>

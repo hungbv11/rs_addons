@@ -48,7 +48,7 @@
         <name>trained_model_name</name>
         <description>train_model_name can be found in path /rs_addons/trainedData/ </description> 
         <value>
-          <string>IAI_VFH_rssvmModel_breakfast1shape</string>
+          <string>IAI_CNN_rsrfModel_tango</string>
         </value>
       </nameValuePair>
 
@@ -57,7 +57,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/, 
         which is object to class amp </description> 
         <value>
-          <string>IAI_VFH_ClassLabel_breakfast1shape</string>
+          <string>IAI_CNN_ClassLabel_tango_dumb_objects</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>

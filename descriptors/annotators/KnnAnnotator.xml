@@ -55,7 +55,7 @@
         <name>trainKNN_matrix</name>
         <description>trainKNN_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description> 
         <value>
-          <string>IAI_VFH_MatTrain_breakfast1shape</string>
+          <string>IAI_CNN_MatTrain_objects</string>
         </value>
       </nameValuePair>
 
@@ -63,7 +63,7 @@
         <name>trainKNNLabel_matrix</name>
         <description>trainKNNLabel_matrix can be found in path /rs_resources/objects_dataset/extractedFeat/ </description>        
         <value>
-          <string>IAI_VFH_MatTrainLabel_breakfast1shape</string>
+          <string>IAI_CNN_MatTrainLabel_objects</string>
         </value>
       </nameValuePair>
 
@@ -72,7 +72,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/, 
         which is object to class map </description> 
         <value>
-          <string>IAI_VFH_ClassLabel_breakfast1shape</string>
+          <string>IAI_CNN_ClassLabel_objects</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
