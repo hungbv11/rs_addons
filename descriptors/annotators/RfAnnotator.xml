@@ -57,7 +57,7 @@
         <description>actual_class_label can be found in path /rs_resources/objects_dataset/extractedFeat/,
         which is object to class map </description> 
         <value>   
-          <string>IAI_CNN_ClassLabel_tango_dumb_objects</string>
+          <string>IAI_CNN_ClassLabel_tango_objects</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
